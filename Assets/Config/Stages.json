@@ -1,0 +1,26 @@
+{
+	"stages": [
+		{
+			"speed": 10,
+			"roadPoints": [
+				{ "x": 0, "y": 0, "z": 0 },
+				{ "x": 0, "y": 0, "z": 50 },
+				{ "x": 0, "y": 0, "z": 100 },
+				{ "x": 0, "y": 0, "z": 150 },
+				{ "x": 0, "y": 0, "z": 200 },
+				{ "x": 0, "y": 10, "z": 300 },
+				{ "x": 0, "y": 0, "z": 400 },
+				{ "x": 0, "y": 0, "z": 450 },
+				{ "x": 0, "y": 0, "z": 500 },
+				{ "x": 0, "y": 0, "z": 550 },
+				{ "x": 0, "y": 0, "z": 600 }
+			],
+			"roadItems": [
+				{ "position": 0.1, "type": "RedBall", "side": "Left" },
+				{ "position": 0.1, "type": "BlueBall", "side": "Left" },
+				{ "position": 0.1, "type": "YellowBall", "side": "Left" },
+				{ "position": 0.1, "type": "PurpleBall", "side": "Left" }
+			]
+		}
+	]
+}

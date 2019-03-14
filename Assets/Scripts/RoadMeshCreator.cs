@@ -1,30 +1,40 @@
-﻿using PathCreation;
+﻿using System.Collections;
+using PathCreation;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
     public class RoadMeshCreator : MonoBehaviour
     {
+        private bool _ready;
+        private VertexPath _roadPath;
+
         [Header("Road settings")]
         public float roadWidth = .4f;
-
         [Range(0, .5f)]
         public float thickness = .15f;
-
         public bool flattenSurface;
 
         [Header("Material settings")]
         public Material roadMaterial;
-
         public Material undersideMaterial;
-
         public float textureTiling = 1;
 
-        public void Create(VertexPath path)
+        public void BeforeStart(VertexPath roadPath)
         {
+            _roadPath = roadPath;
+            _ready = true;
+        }
+
+        private IEnumerator Start()
+        {
+            Debug.Log($"Waiting for princess {GetType().Name}  to be rescued...");
+            yield return new WaitUntil(() => _ready);
+            Debug.Log($"Princess {GetType().Name}  was rescued!");
+
             var (meshFilter, meshRenderer) = GetMeshComponents();
             AssignMaterials(meshRenderer);
-            meshFilter.mesh = CreateRoadMesh(path);
+            meshFilter.mesh = CreateRoadMesh(_roadPath);
         }
 
         private (MeshFilter, MeshRenderer) GetMeshComponents()
@@ -37,8 +47,11 @@ namespace Assets.Scripts
             meshHolder.transform.rotation = Quaternion.identity;
 
             // Ensure mesh renderer and filter components are assigned
-            if (!meshHolder.gameObject.GetComponent<MeshFilter>()) meshHolder.gameObject.AddComponent<MeshFilter>();
-            if (!meshHolder.GetComponent<MeshRenderer>()) meshHolder.gameObject.AddComponent<MeshRenderer>();
+            if (!meshHolder.gameObject.GetComponent<MeshFilter>())
+                meshHolder.gameObject.AddComponent<MeshFilter>();
+
+            if (!meshHolder.GetComponent<MeshRenderer>())
+                meshHolder.gameObject.AddComponent<MeshRenderer>();
 
             var meshFilter = meshHolder.GetComponent<MeshFilter>();
             var meshRenderer = meshHolder.GetComponent<MeshRenderer>();
