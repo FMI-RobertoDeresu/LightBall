@@ -1,10 +1,7 @@
-﻿using System;
-
-namespace Assets.Scripts.Models.Stages
+﻿namespace Assets.Scripts.Models.Stages
 {
-    [Serializable]
     public class StagesConfig
     {
-        public Stage[] stages;
+        public Stage[] Stages { get; set; }
     }
 }

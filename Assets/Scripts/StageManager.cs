@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO;
 using Assets.Scripts.Models.Stages;
+using Newtonsoft.Json;
 using PathCreation;
 using UnityEngine;
 
@@ -51,10 +52,10 @@ namespace Assets.Scripts
             {
                 var stagesPath = Path.Combine(Application.dataPath, "Config/Stages.json");
                 var stagesFileContent = File.ReadAllText(stagesPath);
-                var stagesConfig = JsonUtility.FromJson<StagesConfig>(stagesFileContent);
-                var stage = stagesConfig.stages[0];
+                var stagesConfig = JsonConvert.DeserializeObject<StagesConfig>(stagesFileContent);
+                var stage = stagesConfig.Stages[0];
 
-                BeforeStart(stage.RoadPointsVector3, stage.roadItems, null);
+                BeforeStart(stage.RoadPointsVector3, stage.RoadItems, null);
             }
             catch (Exception exception)
             {

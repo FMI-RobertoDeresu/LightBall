@@ -31,7 +31,7 @@ namespace Assets.Scripts
             for (var i = 0; i < _roadItems.Length; i++)
             {
                 var roadItem = _roadItems[i];
-                var position = _roadPath.GetPoint(roadItem.position);
+                var position = _roadPath.GetPoint(roadItem.Position.Value);
 
                 var ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 ball.name = "RoadItem_ " + i;

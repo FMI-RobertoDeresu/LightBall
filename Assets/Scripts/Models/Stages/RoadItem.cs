@@ -1,13 +1,11 @@
-﻿using System;
-using Assets.Scripts.Models.Stages.Enums;
+﻿using Assets.Scripts.Models.Stages.Enums;
 
 namespace Assets.Scripts.Models.Stages
 {
-    [Serializable]
     public class RoadItem
     {
-        public float position;
-        public RoadItemType type;
-        public RoadItemSide side;
+        public float? Position { get; set; }
+        public RoadItemType? Type { get; set; }
+        public RoadItemSide? Side { get; set; }
     }
 }

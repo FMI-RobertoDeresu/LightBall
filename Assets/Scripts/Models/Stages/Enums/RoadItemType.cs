@@ -2,12 +2,12 @@
 
 namespace Assets.Scripts.Models.Stages.Enums
 {
-    [Serializable]
     public enum RoadItemType
     {
         RedBall = 101,
         BlueBall = 102,
         YellowBall = 103,
+        PurpleBall = 104,
 
         Magnet = 201,
         Multiplier = 202,
