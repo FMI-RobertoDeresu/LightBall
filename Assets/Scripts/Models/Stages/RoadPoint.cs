@@ -1,15 +1,13 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Models.Stages
 {
-    [Serializable]
     public class RoadPoint
     {
-        public float x;
-        public float y;
-        public float z;
+        public float? X { get; set; }
+        public float? Y { get; set; }
+        public float? Z { get; set; }
 
-        public Vector3 ToVector3 => new Vector3(x, y, z);
+        public Vector3 ToVector3 => new Vector3(X.Value, Y.Value, Z.Value);
     }
 }

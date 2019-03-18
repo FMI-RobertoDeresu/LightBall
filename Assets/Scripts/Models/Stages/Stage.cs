@@ -1,16 +1,14 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Models.Stages
 {
-    [Serializable]
     public class Stage
     {
-        public float speed;
-        public RoadPoint[] roadPoints;
-        public RoadItem[] roadItems;
+        public float? Speed { get; set; }
+        public RoadPoint[] RoadPoints { get; set; }
+        public RoadItem[] RoadItems { get; set; }
 
-        public Vector3[] RoadPointsVector3 => roadPoints.Select(x => x.ToVector3).ToArray();
+        public Vector3[] RoadPointsVector3 => RoadPoints.Select(x => x.ToVector3).ToArray();
     }
 }

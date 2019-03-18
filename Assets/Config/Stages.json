@@ -17,8 +17,8 @@
 			],
 			"roadItems": [
 				{ "position": 0.1, "type": "RedBall", "side": "Left" },
-				{ "position": 0.1, "type": "BlueBall", "side": "Left" },
-				{ "position": 0.1, "type": "YellowBall", "side": "Left" },
+				{ "position": 0.1, "type": "BlueBall", "side": "Center" },
+				{ "position": 0.1, "type": "YellowBall", "side": "Right" },
 				{ "position": 0.1, "type": "PurpleBall", "side": "Left" }
 			]
 		}

@@ -2,7 +2,6 @@
 
 namespace Assets.Scripts.Models.Stages.Enums
 {
-    [Serializable]
     public enum RoadItemSide
     {
         Left = 1,

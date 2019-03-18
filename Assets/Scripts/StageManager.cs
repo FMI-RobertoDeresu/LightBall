@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Assets.Scripts.Models.Stages;
+using Newtonsoft.Json;
 using PathCreation;
 using UnityEngine;
 
@@ -22,7 +23,7 @@ namespace Assets.Scripts
             var roadPath = new VertexPath(new BezierPath(stage.RoadPointsVector3));
 
             var roadManager = road.GetComponent<RoadManager>();
-            roadManager.RenderRoad(roadPath, stage.roadItems);
+            roadManager.RenderRoad(roadPath, stage.RoadItems);
 
             var ballManager = ball.GetComponent<BallManager>();
             ballManager.BeforeStart(roadPath);
@@ -34,8 +35,8 @@ namespace Assets.Scripts
             {
                 var stagesPath = Path.Combine(Application.dataPath, "Config/Stages.json");
                 var stagesFileContent = File.ReadAllText(stagesPath);
-                var stagesConfig = JsonUtility.FromJson<StagesConfig>(stagesFileContent);
-                var stage = stagesConfig.stages[0];
+                var stagesConfig = JsonConvert.DeserializeObject<StagesConfig>(stagesFileContent);
+                var stage = stagesConfig.Stages[0];
 
                 RenderStage(stage);
             }
