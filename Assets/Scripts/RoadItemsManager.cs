@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Assets.Scripts.Models.Stages;
+﻿using Assets.Scripts.Models.Stages;
 using PathCreation;
 using UnityEngine;
 
@@ -7,31 +6,16 @@ namespace Assets.Scripts
 {
     public class RoadItemsManager : MonoBehaviour
     {
-        private bool _ready;
-        private VertexPath _roadPath;
-        private RoadItem[] _roadItems;
-
         [Header("Settings")]
         public GameObject[] prefabs;
         public Material[] materials;
 
-        public void BeforeStart(VertexPath roadPath, RoadItem[] roadItems)
+        public void RenderItems(VertexPath roadPath, RoadItem[] roadItems)
         {
-            _roadPath = roadPath;
-            _roadItems = roadItems;
-            _ready = true;
-        }
-
-        private IEnumerator Start()
-        {
-            Debug.Log($"Waiting for princess {GetType().Name}  to be rescued...");
-            yield return new WaitUntil(() => _ready);
-            Debug.Log($"Princess {GetType().Name}  was rescued!");
-
-            for (var i = 0; i < _roadItems.Length; i++)
+            for (var i = 0; i < roadItems.Length; i++)
             {
-                var roadItem = _roadItems[i];
-                var position = _roadPath.GetPoint(roadItem.position);
+                var roadItem = roadItems[i];
+                var position = roadPath.GetPoint(roadItem.position);
 
                 var ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 ball.name = "RoadItem_ " + i;
@@ -41,7 +25,7 @@ namespace Assets.Scripts
                 var rigidBody = ball.AddComponent<Rigidbody>();
                 rigidBody.isKinematic = true;
 
-                var meshRenderer = ball.AddComponent<MeshRenderer>();
+                var meshRenderer = ball.GetComponent<MeshRenderer>();
                 //meshRenderer.material = GameObject.ma
             }
         }

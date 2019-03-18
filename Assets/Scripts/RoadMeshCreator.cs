@@ -1,14 +1,10 @@
-﻿using System.Collections;
-using PathCreation;
+﻿using PathCreation;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
     public class RoadMeshCreator : MonoBehaviour
     {
-        private bool _ready;
-        private VertexPath _roadPath;
-
         [Header("Road settings")]
         public float roadWidth = .4f;
         [Range(0, .5f)]
@@ -20,21 +16,11 @@ namespace Assets.Scripts
         public Material undersideMaterial;
         public float textureTiling = 1;
 
-        public void BeforeStart(VertexPath roadPath)
+        public void CreateMesh(VertexPath roadPath)
         {
-            _roadPath = roadPath;
-            _ready = true;
-        }
-
-        private IEnumerator Start()
-        {
-            Debug.Log($"Waiting for princess {GetType().Name}  to be rescued...");
-            yield return new WaitUntil(() => _ready);
-            Debug.Log($"Princess {GetType().Name}  was rescued!");
-
             var (meshFilter, meshRenderer) = GetMeshComponents();
             AssignMaterials(meshRenderer);
-            meshFilter.mesh = CreateRoadMesh(_roadPath);
+            meshFilter.mesh = CreateRoadMesh(roadPath);
         }
 
         private (MeshFilter, MeshRenderer) GetMeshComponents()

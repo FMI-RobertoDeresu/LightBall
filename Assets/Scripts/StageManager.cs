@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.IO;
 using Assets.Scripts.Models.Stages;
 using PathCreation;
@@ -9,40 +8,24 @@ namespace Assets.Scripts
 {
     public class StageManager : MonoBehaviour
     {
-        private bool _ready;
-        private Vector3[] _roadPoints;
-        private RoadItem[] _roadItems;
-        private Action _onReadyFn;
-
         [Header("Stage objects")]
         public GameObject road;
         public GameObject ball;
 
-        public void BeforeStart(Vector3[] roadPoints, RoadItem[] roadItems, Action onReadyFn)
-        {
-            _roadPoints = roadPoints;
-            _roadItems = roadItems;
-            _onReadyFn = onReadyFn;
-            _ready = true;
-        }
-
-        private IEnumerator Start()
+        private void Start()
         {
             Test();
+        }
 
-            Debug.Log($"Waiting for princess {GetType().Name}  to be rescued...");
-            yield return new WaitUntil(() => _ready);
-            Debug.Log($"Princess {GetType().Name}  was rescued!");
-
-            var roadPath = new VertexPath(new BezierPath(_roadPoints));
+        public void RenderStage(Stage stage)
+        {
+            var roadPath = new VertexPath(new BezierPath(stage.RoadPointsVector3));
 
             var roadManager = road.GetComponent<RoadManager>();
-            roadManager.BeforeStart(roadPath, _roadItems);
+            roadManager.RenderRoad(roadPath, stage.roadItems);
 
             var ballManager = ball.GetComponent<BallManager>();
             ballManager.BeforeStart(roadPath);
-
-            _onReadyFn?.Invoke();
         }
 
         private void Test()
@@ -54,7 +37,7 @@ namespace Assets.Scripts
                 var stagesConfig = JsonUtility.FromJson<StagesConfig>(stagesFileContent);
                 var stage = stagesConfig.stages[0];
 
-                BeforeStart(stage.RoadPointsVector3, stage.roadItems, null);
+                RenderStage(stage);
             }
             catch (Exception exception)
             {

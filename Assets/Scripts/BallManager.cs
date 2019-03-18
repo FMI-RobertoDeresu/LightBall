@@ -19,15 +19,23 @@ namespace Assets.Scripts
         public Vector3 ballCameraInitPosition = new Vector3(0, 3, -20);
         public Vector3 ballCameraInitRotation = new Vector3(5, 0, 0);
 
-        private IEnumerator Start()
+        public void BeforeStart(VertexPath path)
         {
-            Debug.Log($"Waiting for princess {GetType().Name}  to be rescued...");
-            yield return new WaitUntil(() => _ready);
-            Debug.Log($"Princess {GetType().Name}  was rescued!");
+            _path = path;
+            _ready = true;
         }
 
         private void Update()
         {
+            StartCoroutine(UpdateBall());
+        }
+
+        private IEnumerator UpdateBall()
+        {
+            Debug.Log($"Waiting for princess {GetType().Name}  to be rescued...");
+            yield return new WaitUntil(() => _ready);
+            Debug.Log($"Princess {GetType().Name}  was rescued!");
+
             _distanceTraveled += speed * Time.deltaTime;
             var pathPointPosition = _path.GetPointAtDistance(_distanceTraveled, end);
             var pathPointRotation = _path.GetRotationAtDistance(_distanceTraveled, end);
@@ -40,12 +48,6 @@ namespace Assets.Scripts
             var rotationAngles = pathPointRotation.eulerAngles + Vector3.forward * 90 + ballCameraInitRotation;
             ballCamera.transform.SetPositionAndRotation(pathPointPosition, Quaternion.Euler(rotationAngles));
             ballCamera.transform.Translate(ballCameraInitPosition);
-        }
-
-        public void BeforeStart(VertexPath path)
-        {
-            _path = path;
-            _ready = true;
         }
     }
 }
