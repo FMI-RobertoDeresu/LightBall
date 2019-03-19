@@ -26,11 +26,11 @@ namespace Assets.Scripts
         {
             yield return new WaitUntil(() => _ready);
 
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-                _ballManager.ChangeSide(-1);
+            if (Input.GetKey(KeyCode.LeftArrow))
+                _ballManager.UpdatePosition(-1);
 
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-                _ballManager.ChangeSide(1);
+            if (Input.GetKey(KeyCode.RightArrow))
+                _ballManager.UpdatePosition(1);
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -47,7 +47,7 @@ namespace Assets.Scripts
             if (direction.IsIn(SwipeDirection.Left, SwipeDirection.Right))
             {
                 var intDirection = direction == SwipeDirection.Left ? -1 : 1;
-                _ballManager.ChangeSide(intDirection);
+                _ballManager.UpdatePosition(intDirection);
             }
         }
 

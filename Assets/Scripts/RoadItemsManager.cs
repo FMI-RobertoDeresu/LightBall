@@ -20,7 +20,7 @@ namespace Assets.Scripts
                 var roadItem = roadItems[i];
                 var roadItemGo = (GameObject) null;
                 var pointPosition = roadPath.GetPoint(roadItem.Position.Value);
-                var pointRotation = roadPath.GetRotation(roadItem.Position.Value);
+                var pointRotationAngles = roadPath.GetRotation(roadItem.Position.Value).eulerAngles;
 
                 // ball
                 if (roadItem.Type.IsIn(RoadItemType.RedBall, RoadItemType.BlueBall, RoadItemType.YellowBall,
@@ -44,11 +44,26 @@ namespace Assets.Scripts
                 if (roadItemGo != null)
                 {
                     var side = (roadItem.Side == RoadItemSide.Left ? -1f : 0f) * 2 +
-                                         (roadItem.Side == RoadItemSide.Right ? 1f : 0f) * 2;
-                    roadItemGo.transform.position = pointPosition + Vector3.right * side + Vector3.up * 0.5f;
-                    roadItemGo.transform.rotation = pointRotation;
+                               (roadItem.Side == RoadItemSide.Right ? 1f : 0f) * 2;
+
+                    var position = pointPosition + Vector3.right * side + Vector3.up * 0.5f;
+                    var rotation = Quaternion.Euler(new Vector3(pointRotationAngles.x, pointRotationAngles.y, 0));
+                    roadItemGo.transform.SetPositionAndRotation(position, rotation);
                 }
             }
+        }
+
+        public void RenderPortal(VertexPath roadPath)
+        {
+            var portalPrefab = prefabs.First(x => x.name == "Portal");
+            var portal = Instantiate(portalPrefab);
+
+            var pointPosition = roadPath.GetPoint(0.999f);
+            var pointRotationAngles = roadPath.GetRotation(0.999f).eulerAngles;
+
+            portal.name = "Portal";
+            portal.transform.position = pointPosition;
+            portal.transform.rotation = Quaternion.Euler(pointRotationAngles);
         }
     }
 }

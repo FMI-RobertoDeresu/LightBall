@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using Assets.Scripts.Models;
+﻿using System;
+using System.Collections;
 using PathCreation;
 using UnityEngine;
 
@@ -10,9 +10,8 @@ namespace Assets.Scripts
         private bool _ready;
         private float _distanceTraveled;
         private VertexPath _path;
+        private float _hPos;
         private float _speed;
-        private float _rotationSpeed;
-        private BallSide _side;
 
         [Header("Ball")]
         public EndOfPathInstruction end = EndOfPathInstruction.Stop;
@@ -22,12 +21,11 @@ namespace Assets.Scripts
         public Vector3 ballCameraInitPosition = new Vector3(0, 3, -20);
         public Vector3 ballCameraInitRotation = new Vector3(5, 0, 0);
 
-        public void BeforeStart(VertexPath path)
+        public void BeforeStart(VertexPath path, float speed)
         {
             _path = path;
-            _speed = 15;
-            _rotationSpeed = 15;
-            _side = BallSide.Center;
+            _hPos = 0;
+            _speed = speed;
 
             var ballAction = GetComponent<BallActions>();
             ballAction.BeforeStart();
@@ -35,11 +33,9 @@ namespace Assets.Scripts
             _ready = true;
         }
 
-        public void ChangeSide(int change)
+        public void UpdatePosition(int change)
         {
-            if (_side == BallSide.Left && change == -1 || _side == BallSide.Right && change == 1)
-                return;
-            _side = _side + change;
+            _hPos = Math.Max(-1f, Math.Min(1f, _hPos + change * 0.1f));
         }
 
         private void Update()
@@ -56,15 +52,15 @@ namespace Assets.Scripts
             var pathPointRotation = _path.GetRotationAtDistance(_distanceTraveled, end);
 
             // ball
-            var ballPosition = pathPointPosition + Vector3.up * 0.5f + Vector3.right * ((int) _side - 2f) * 2f;
+            var ballPosition = pathPointPosition + Vector3.up * 0.5f + Vector3.right * _hPos * 2f;
             var ballRotationAngles = new Vector3(
-                pathPointRotation.eulerAngles.x,
-                90 + pathPointRotation.eulerAngles.y,
-                transform.rotation.eulerAngles.z + _rotationSpeed);
+                transform.rotation.eulerAngles.x,
+                pathPointRotation.eulerAngles.y,
+                transform.rotation.eulerAngles.z);
             transform.SetPositionAndRotation(ballPosition, Quaternion.Euler(ballRotationAngles));
 
             // camera
-            var cameraPosition = pathPointPosition + Vector3.right * ((int) _side - 2f) * 0f;
+            var cameraPosition = pathPointPosition + Vector3.right * _hPos * 0f;
             var cameraRotationAngles = pathPointRotation.eulerAngles + Vector3.forward * 90 + ballCameraInitRotation;
             ballCamera.transform.SetPositionAndRotation(cameraPosition, Quaternion.Euler(cameraRotationAngles));
             ballCamera.transform.Translate(ballCameraInitPosition);

@@ -26,7 +26,7 @@ namespace Assets.Scripts
             roadManager.RenderRoad(roadPath, stage.RoadItems);
 
             var ballManager = ball.GetComponent<BallManager>();
-            ballManager.BeforeStart(roadPath);
+            ballManager.BeforeStart(roadPath, stage.Speed.Value);
         }
 
         private void Test()

@@ -6,9 +6,8 @@ namespace Assets.Scripts
     {
         private void OnCollisionEnter(Collision col)
         {
-            if (col.gameObject.name == "prop_powerCube")
+            if (col.gameObject.name.StartsWith("RoadItem"))
                 Destroy(col.gameObject);
-            Debug.Log(col.gameObject.name);
         }
     }
 }

@@ -13,45 +13,22 @@ namespace Assets.Scripts
 
         [Header("Material settings")]
         public Material roadMaterial;
-        public Material undersideMaterial;
-        public float textureTiling = 1;
+        public Material underMaterial;
+        public Material sideMaterial;
 
         public void CreateMesh(VertexPath roadPath)
         {
-            var (meshFilter, meshRenderer) = GetMeshComponents();
-            AssignMaterials(meshRenderer);
-            meshFilter.mesh = CreateRoadMesh(roadPath);
-        }
+            //transform.rotation = Quaternion.identity;
+            var meshFilter = GetComponent<MeshFilter>();
+            var meshRenderer = GetComponent<MeshRenderer>();
+            var meshCollider = GetComponent<MeshCollider>();
 
-        private (MeshFilter, MeshRenderer) GetMeshComponents()
-        {
-            // Find/creator mesh holder object in children
-            var meshHolderName = "MeshHolder";
-            var meshHolder = transform.Find(meshHolderName);
+            meshRenderer.sharedMaterials = new[] { roadMaterial, underMaterial, sideMaterial };
 
-            //meshHolder.transform.position = Vector3.zero;
-            meshHolder.transform.rotation = Quaternion.identity;
+            var mesh = CreateRoadMesh(roadPath);
 
-            // Ensure mesh renderer and filter components are assigned
-            if (!meshHolder.gameObject.GetComponent<MeshFilter>())
-                meshHolder.gameObject.AddComponent<MeshFilter>();
-
-            if (!meshHolder.GetComponent<MeshRenderer>())
-                meshHolder.gameObject.AddComponent<MeshRenderer>();
-
-            var meshFilter = meshHolder.GetComponent<MeshFilter>();
-            var meshRenderer = meshHolder.GetComponent<MeshRenderer>();
-
-            return (meshFilter, meshRenderer);
-        }
-
-        private void AssignMaterials(MeshRenderer meshRenderer)
-        {
-            if (roadMaterial != null && undersideMaterial != null)
-            {
-                meshRenderer.sharedMaterials = new[] {roadMaterial, undersideMaterial, undersideMaterial};
-                meshRenderer.sharedMaterials[0].mainTextureScale = new Vector3(1, textureTiling);
-            }
+            meshFilter.mesh = mesh;
+            meshCollider.sharedMesh = mesh;
         }
 
         private Mesh CreateRoadMesh(VertexPath path)
