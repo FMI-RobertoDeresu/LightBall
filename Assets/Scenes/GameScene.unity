@@ -484,9 +484,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabs:
   - {fileID: 6271973883947161, guid: 2c981c18fafd5a640b3214f23e531771, type: 3}
-  - {fileID: 5393601551598397742, guid: 1b04316de565259479750febaef79f59, type: 3}
+  - {fileID: 1702782277789112192, guid: 2f386a62aad584d44817c322b3ba185d, type: 3}
   materials:
-  - {fileID: 2100000, guid: 66b2a9b96eec6e14c8a836bc5187bcb5, type: 2}
   - {fileID: 2100000, guid: 00492a86c5cce4540ae0016b6025258d, type: 2}
   - {fileID: 2100000, guid: 235a85ced31a37347b849ee5231bdaaa, type: 2}
   - {fileID: 2100000, guid: fa63343180ead41478b75e7bb93b2d0d, type: 2}
@@ -566,7 +565,6 @@ GameObject:
   - component: {fileID: 1966716437}
   - component: {fileID: 1966716443}
   - component: {fileID: 1966716444}
-  - component: {fileID: 1966716446}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -587,6 +585,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   end: 0
+  materials:
+  - {fileID: 2100000, guid: 00492a86c5cce4540ae0016b6025258d, type: 2}
+  - {fileID: 2100000, guid: 235a85ced31a37347b849ee5231bdaaa, type: 2}
+  - {fileID: 2100000, guid: fa63343180ead41478b75e7bb93b2d0d, type: 2}
+  - {fileID: 2100000, guid: 8151f465e1175a14492dcb90641796ec, type: 2}
   ballCamera: {fileID: 2081909167}
   ballCameraInitPosition: {x: 0, y: 3, z: -20}
   ballCameraInitRotation: {x: 5, y: 0, z: 0}
@@ -620,7 +623,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fadb1e8e9c1233a4c81cbade02226df7, type: 2}
+  - {fileID: 2100000, guid: fa63343180ead41478b75e7bb93b2d0d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -702,18 +705,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d67134f29eb2802439f2084e6f8ca6f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!75 &1966716446
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1966716436}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &2081909167
 GameObject:
   m_ObjectHideFlags: 0

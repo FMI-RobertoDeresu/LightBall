@@ -15,6 +15,7 @@ namespace Assets.Scripts
 
         [Header("Ball")]
         public EndOfPathInstruction end = EndOfPathInstruction.Stop;
+        public Material[] materials;
 
         [Header("Camera")]
         public GameObject ballCamera;
@@ -64,6 +65,19 @@ namespace Assets.Scripts
             var cameraRotationAngles = pathPointRotation.eulerAngles + Vector3.forward * 90 + ballCameraInitRotation;
             ballCamera.transform.SetPositionAndRotation(cameraPosition, Quaternion.Euler(cameraRotationAngles));
             ballCamera.transform.Translate(ballCameraInitPosition);
+        }
+
+        public void OnRoadItemBallCollision(GameObject roadItemBall)
+        {
+            var meshRenderer = GetComponent<MeshRenderer>();
+            var roadItemBallMaterial = roadItemBall.GetComponent<MeshRenderer>().material;
+            meshRenderer.material = roadItemBallMaterial;
+            Destroy(roadItemBall);
+        }
+
+        public void OnPortalCollision(GameObject colGameObject)
+        {
+            Debug.Log("Portal collision");
         }
     }
 }

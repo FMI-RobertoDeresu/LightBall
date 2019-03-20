@@ -26,16 +26,19 @@ namespace Assets.Scripts
                 if (roadItem.Type.IsIn(RoadItemType.RedBall, RoadItemType.BlueBall, RoadItemType.YellowBall,
                     RoadItemType.PurpleBall))
                 {
-                    var sphere = prefabs.First(x => x.name == "Sphere");
-                    var ball = Instantiate(sphere);
+                    var ballPrefab = prefabs.First(x => x.name == "Sphere");
+                    var ballColor = roadItem.Type.ToString().Replace("Ball", "");
+
+                    var ball = Instantiate(ballPrefab);
                     roadItemGo = ball;
 
-                    ball.name = "RoadItem_ " + i;
+                    ball.name = "RoadItem_Ball_ " + i;
+                    ball.tag = $"{ballColor}Ball";
                     ball.transform.position = pointPosition;
                     ball.transform.Translate(Vector3.up * 0.5f);
 
                     var meshRenderer = ball.GetComponent<MeshRenderer>();
-                    var materialName = roadItem.Type.ToString().Replace("Ball", "");
+                    var materialName = $"Ball {ballColor}";
                     var material = materials.First(x => x.name == materialName);
                     meshRenderer.material = material;
                 }
@@ -58,12 +61,11 @@ namespace Assets.Scripts
             var portalPrefab = prefabs.First(x => x.name == "Portal");
             var portal = Instantiate(portalPrefab);
 
+            portal.name = "RoadItem_Portal";
+
             var pointPosition = roadPath.GetPoint(0.999f);
             var pointRotationAngles = roadPath.GetRotation(0.999f).eulerAngles;
-
-            portal.name = "Portal";
-            portal.transform.position = pointPosition;
-            portal.transform.rotation = Quaternion.Euler(pointRotationAngles);
+            portal.transform.SetPositionAndRotation(pointPosition, Quaternion.Euler(pointRotationAngles));
         }
     }
 }
