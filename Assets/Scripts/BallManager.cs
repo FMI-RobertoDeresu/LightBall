@@ -18,7 +18,7 @@ namespace Assets.Scripts
         public Material[] materials;
 
         [Header("Camera")]
-        public GameObject ballCamera;
+        public Camera ballCamera;
         public Vector3 ballCameraInitPosition = new Vector3(0, 3, -20);
         public Vector3 ballCameraInitRotation = new Vector3(5, 0, 0);
 
@@ -28,15 +28,15 @@ namespace Assets.Scripts
             _hPos = 0;
             _speed = speed;
 
-            var ballAction = GetComponent<BallActions>();
+            var ballAction = GetComponent<BallPlayerActions>();
             ballAction.BeforeStart();
 
             _ready = true;
         }
 
-        public void UpdatePosition(int change)
+        public void UpdatePosition(float change)
         {
-            _hPos = Math.Max(-1f, Math.Min(1f, _hPos + change * 0.1f));
+            _hPos = Math.Max(-1f, Math.Min(1f, _hPos + change));
         }
 
         private void Update()
