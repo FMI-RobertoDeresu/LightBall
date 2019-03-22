@@ -13,7 +13,6 @@ namespace Assets.Scripts
 
             var roadItemsManager = GetComponent<RoadItemsManager>();
             roadItemsManager.RenderItems(roadPath, roadItems);
-            roadItemsManager.RenderPortal(roadPath);
         }
     }
 }

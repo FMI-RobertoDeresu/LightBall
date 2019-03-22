@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using Assets.Scripts.Models.Stages.Enums;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -7,10 +9,19 @@ namespace Assets.Scripts
         private void OnCollisionEnter(Collision col)
         {
             var ballManager = GetComponent<BallManager>();
-            if (col.gameObject.name.Contains("_Ball_"))
+            var balls = new[]
+            {
+                RoadItemType.BlueBall,
+                RoadItemType.PurpleBall,
+                RoadItemType.RedBall,
+                RoadItemType.YellowBall
+            };
+            var objectIsBall = balls.Any(x => x.ToString() == col.gameObject.tag);
+            if (objectIsBall)
                 ballManager.OnRoadItemBallCollision(col.gameObject);
 
-            if (col.gameObject.name.Contains("RoadItem_Portal"))
+            var objectIsPortal = col.gameObject.tag == RoadItemType.Portal.ToString();
+            if (objectIsPortal)
                 ballManager.OnPortalCollision(col.gameObject);
         }
     }

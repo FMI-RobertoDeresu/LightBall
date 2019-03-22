@@ -1,19 +1,24 @@
-﻿using System;
-
-namespace Assets.Scripts.Models.Stages.Enums
+﻿namespace Assets.Scripts.Models.Stages.Enums
 {
     public enum RoadItemType
     {
-        RedBall = 101,
-        BlueBall = 102,
-        YellowBall = 103,
-        PurpleBall = 104,
+        RedBall,
+        BlueBall,
+        YellowBall,
+        PurpleBall,
 
-        Magnet = 201,
-        Multiplier = 202,
-        SuperBall = 203,
+        RedBallSwitch,
+        BlueBallSwitch,
+        YellowBallSwitch,
+        PurpleBallSwitch,
 
-        Coin = 301,
-        Diamond = 302
+        Magnet,
+        Multiplier,
+        SuperBall,
+
+        Coin,
+        Diamond,
+
+        Portal
     }
 }

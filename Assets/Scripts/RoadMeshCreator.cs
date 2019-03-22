@@ -45,7 +45,7 @@ namespace Assets.Scripts
             var vertexIndex = 0;
             var triIndex = 0;
 
-            // Vertices for the top of the road are layed out:
+            // Vertices for the top of the roadGo are layed out:
             // 0  1
             // 8  9
             // and so on... So the triangle map 0,8,1 for example, defines a triangle from top left to bottom left to bottom right.
@@ -63,14 +63,14 @@ namespace Assets.Scripts
                 var vertexSideA = path.vertices[i] - localRight * Mathf.Abs(roadWidth) - transform.position;
                 var vertexSideB = path.vertices[i] + localRight * Mathf.Abs(roadWidth) - transform.position;
 
-                // Add top of road vertices
+                // Add top of roadGo vertices
                 vertices[vertexIndex + 0] = vertexSideA;
                 vertices[vertexIndex + 1] = vertexSideB;
-                // Add bottom of road vertices
+                // Add bottom of roadGo vertices
                 vertices[vertexIndex + 2] = vertexSideA - localUp * thickness;
                 vertices[vertexIndex + 3] = vertexSideB - localUp * thickness;
 
-                // Duplicate vertices to get flat shading for sides of road
+                // Duplicate vertices to get flat shading for sides of roadGo
                 vertices[vertexIndex + 4] = vertices[vertexIndex + 0];
                 vertices[vertexIndex + 5] = vertices[vertexIndex + 1];
                 vertices[vertexIndex + 6] = vertices[vertexIndex + 2];
@@ -80,13 +80,13 @@ namespace Assets.Scripts
                 uvs[vertexIndex + 0] = new Vector2(0, path.times[i]);
                 uvs[vertexIndex + 1] = new Vector2(1, path.times[i]);
 
-                // Top of road normals
+                // Top of roadGo normals
                 normals[vertexIndex + 0] = localUp;
                 normals[vertexIndex + 1] = localUp;
-                // Bottom of road normals
+                // Bottom of roadGo normals
                 normals[vertexIndex + 2] = -localUp;
                 normals[vertexIndex + 3] = -localUp;
-                // Sides of road normals
+                // Sides of roadGo normals
                 normals[vertexIndex + 4] = -localRight;
                 normals[vertexIndex + 5] = localRight;
                 normals[vertexIndex + 6] = -localRight;
@@ -98,7 +98,7 @@ namespace Assets.Scripts
                     for (var j = 0; j < triangleMap.Length; j++)
                     {
                         roadTriangles[triIndex + j] = (vertexIndex + triangleMap[j]) % vertices.Length;
-                        // reverse triangle map for under road so that triangles wind the other way and are visible from underneath
+                        // reverse triangle map for under roadGo so that triangles wind the other way and are visible from underneath
                         underRoadTriangles[triIndex + j] =
                             (vertexIndex + triangleMap[triangleMap.Length - 1 - j] + 2) % vertices.Length;
                     }
