@@ -6,23 +6,41 @@ namespace Assets.Scripts
 {
     public class BallCollision : MonoBehaviour
     {
+        private BallManager _ballManager;
+
+        private void Start()
+        {
+            _ballManager = GetComponent<BallManager>();
+        }
+
         private void OnCollisionEnter(Collision col)
         {
-            var ballManager = GetComponent<BallManager>();
+
             var balls = new[]
             {
-                RoadItemType.BlueBall,
-                RoadItemType.PurpleBall,
                 RoadItemType.RedBall,
-                RoadItemType.YellowBall
+                RoadItemType.BlueBall,
+                RoadItemType.YellowBall,
+                RoadItemType.PurpleBall
             };
             var objectIsBall = balls.Any(x => x.ToString() == col.gameObject.tag);
             if (objectIsBall)
-                ballManager.OnRoadItemBallCollision(col.gameObject);
+                _ballManager.OnRoadItemBallCollision(col.gameObject);
+
+            var switches = new[]
+            {
+                RoadItemType.RedSwitch,
+                RoadItemType.BlueSwitch,
+                RoadItemType.YellowSwitch,
+                RoadItemType.PurpleSwitch
+            };
+            var objectIsSwitch = switches.Any(x => x.ToString() == col.gameObject.tag);
+            if (objectIsSwitch)
+                _ballManager.OnRoadItemSwitchCollision(col.gameObject);
 
             var objectIsPortal = col.gameObject.tag == RoadItemType.Portal.ToString();
             if (objectIsPortal)
-                ballManager.OnPortalCollision(col.gameObject);
+                _ballManager.OnPortalCollision(col.gameObject);
         }
     }
 }

@@ -9,6 +9,10 @@ TagManager:
   - PurpleBall
   - YellowBall
   - Portal
+  - RedSwitch
+  - BlueSwitch
+  - YellowSwitch
+  - PurpleSwitch
   layers:
   - Default
   - TransparentFX

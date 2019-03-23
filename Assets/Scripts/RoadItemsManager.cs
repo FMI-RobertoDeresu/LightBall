@@ -18,8 +18,9 @@ namespace Assets.Scripts
             for (var i = 0; i < roadItems.Length; i++)
             {
                 var roadItem = roadItems[i];
-                var pointPosition = roadPath.GetPoint(roadItem.Position.Value);
-                var pointRotationAngles = roadPath.GetRotation(roadItem.Position.Value).eulerAngles;
+                var roadItemPosition = roadItem.Position.Value;
+                var pointPosition = roadPath.GetPoint(roadItemPosition);
+                var pointRotationAngles = roadPath.GetRotation(roadItemPosition).eulerAngles;
 
                 // instantiate
                 var prefabName = roadItem.Type.Value.GetPrefabName();

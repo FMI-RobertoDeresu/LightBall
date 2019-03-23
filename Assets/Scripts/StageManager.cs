@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace Assets.Scripts
         private VertexPath _roadPath;
         private Stage _stageInfo;
         private List<RoadItem> _reachedRoadItems;
+        private GameObject _currentCollisionPointsGo;
 
         private int _pointsPerItem;
         private int _totalPoints;
@@ -28,9 +30,11 @@ namespace Assets.Scripts
         [Header("Stage objects")]
         public GameObject roadGo;
         public GameObject ballGo;
+        public Canvas screenGo;
         public Slider progressBarGo;
+        public Text progressBarTextGo;
         public Text totalPointsGo;
-        public Text onCollisionPointsGo;
+        public GameObject[] prefabs;
 
         private void Start()
         {
@@ -44,8 +48,10 @@ namespace Assets.Scripts
 
             if (_ballManager.DistanceTraveled > 0)
             {
-                _percentTraveled = _ballManager.DistanceTraveled / _roadPath.length;
+                var offset = _stageInfo.Ball.StartOffset.Value;
+                _percentTraveled = (_ballManager.DistanceTraveled) / (_roadPath.length - offset);
                 progressBarGo.value = _percentTraveled;
+                progressBarTextGo.text = $"{Convert.ToInt16(_percentTraveled * 100)}%";
             }
 
             if (_totalPoints > 0)
@@ -65,9 +71,37 @@ namespace Assets.Scripts
                 : _stageInfo.PointsIncrementPerItem.Value;
 
             _totalPoints += _pointsPerItem;
-            onCollisionPointsGo.text = _pointsPerItem.ToString();
+            StartCoroutine(ShowOnCollisionPoints(_pointsPerItem.ToString()));
 
             _reachedRoadItems.Add(ballRoadItem);
+            Destroy(roadItemGo);
+        }
+
+        private IEnumerator ShowOnCollisionPoints(string value)
+        {
+            var collisionPointsPrefab = prefabs.First(x => x.name == "CollisionPoints");
+            var collisionPointsGo = Instantiate(collisionPointsPrefab);
+            collisionPointsGo.transform.SetParent(screenGo.transform, false);
+            collisionPointsGo.GetComponent<Text>().text = "+" + value;
+
+            _currentCollisionPointsGo = collisionPointsGo;
+
+            var progress = 0f;
+            while (progress <= 1f)
+            {
+                // if another object was created, show only that object
+                if (collisionPointsGo != _currentCollisionPointsGo)
+                    break;
+
+                progress += 0.05f;
+                var position = _ballManager.ballCamera.WorldToScreenPoint(_ballManager.Position);
+                position.y += 30 + progress * 25;
+                collisionPointsGo.transform.position = position;
+                collisionPointsGo.transform.localScale *= 1.0025f;
+                yield return new WaitForSeconds(0.01f);
+            }
+
+            Destroy(collisionPointsGo);
         }
 
         private void OnEndPortalReached()
@@ -78,9 +112,9 @@ namespace Assets.Scripts
 
         public void RenderStage(Stage stage)
         {
-            _reachedRoadItems = new List<RoadItem>();
             _pointsPerItem = 0;
             _totalPoints = 0;
+            _reachedRoadItems = new List<RoadItem>();
 
             _roadPath = new VertexPath(new BezierPath(stage.RoadPointsVector3));
 
@@ -90,8 +124,9 @@ namespace Assets.Scripts
             _ballManager = ballGo.GetComponent<BallManager>();
             _ballManager.BeforeStart(
                 _roadPath,
-                stage.Speed.Value,
-                stage.InitialType.Value,
+                stage.Ball.Speed.Value,
+                stage.Ball.InitialType.Value,
+                stage.Ball.StartOffset.Value,
                 OnBallCollision,
                 OnEndPortalReached);
 

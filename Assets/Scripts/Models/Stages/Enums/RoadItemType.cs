@@ -7,10 +7,10 @@
         YellowBall,
         PurpleBall,
 
-        RedBallSwitch,
-        BlueBallSwitch,
-        YellowBallSwitch,
-        PurpleBallSwitch,
+        RedSwitch,
+        BlueSwitch,
+        YellowSwitch,
+        PurpleSwitch,
 
         Magnet,
         Multiplier,

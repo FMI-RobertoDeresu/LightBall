@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.Scripts.Models.Stages.Enums;
+using Assets.Scripts.Utils;
 
 namespace Assets.Scripts.Extensions
 {
@@ -16,16 +17,12 @@ namespace Assets.Scripts.Extensions
                 case RoadItemType.PurpleBall:
                     materialName = $"Ball {roadItemType.ToString().Replace("Ball", "")}";
                     break;
-                case RoadItemType.RedBallSwitch:
-                case RoadItemType.BlueBallSwitch:
-                case RoadItemType.YellowBallSwitch:
-                case RoadItemType.PurpleBallSwitch:
-                case RoadItemType.Magnet:
-                case RoadItemType.Multiplier:
-                case RoadItemType.SuperBall:
-                case RoadItemType.Coin:
-                case RoadItemType.Diamond:
-                    throw new NotSupportedException();
+                case RoadItemType.RedSwitch:
+                case RoadItemType.BlueSwitch:
+                case RoadItemType.YellowSwitch:
+                case RoadItemType.PurpleSwitch:
+                    materialName = $"Switch {roadItemType.ToString().Replace("Switch", "")}";
+                    break;
                 case RoadItemType.Portal:
                     materialName = null;
                     break;
@@ -47,16 +44,12 @@ namespace Assets.Scripts.Extensions
                 case RoadItemType.PurpleBall:
                     prefabName = "Sphere";
                     break;
-                case RoadItemType.RedBallSwitch:
-                case RoadItemType.BlueBallSwitch:
-                case RoadItemType.YellowBallSwitch:
-                case RoadItemType.PurpleBallSwitch:
-                case RoadItemType.Magnet:
-                case RoadItemType.Multiplier:
-                case RoadItemType.SuperBall:
-                case RoadItemType.Coin:
-                case RoadItemType.Diamond:
-                    throw new NotSupportedException();
+                case RoadItemType.RedSwitch:
+                case RoadItemType.BlueSwitch:
+                case RoadItemType.YellowSwitch:
+                case RoadItemType.PurpleSwitch:
+                    prefabName = "ColorSwitch";
+                    break;
                 case RoadItemType.Portal:
                     prefabName = "Portal";
                     break;
@@ -65,6 +58,25 @@ namespace Assets.Scripts.Extensions
             }
 
             return prefabName;
+        }
+
+        public static RoadItemType GetSwitchBallType(this RoadItemType roadItemType)
+        {
+            RoadItemType type;
+            switch (roadItemType)
+            {
+                case RoadItemType.RedSwitch:
+                case RoadItemType.BlueSwitch:
+                case RoadItemType.YellowSwitch:
+                case RoadItemType.PurpleSwitch:
+                    var typeStr = $"{roadItemType.ToString().Replace("Switch", "")}Ball";
+                    type = EnumUtils.Parse<RoadItemType>(typeStr);
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+
+            return type;
         }
     }
 }
