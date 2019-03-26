@@ -1,5 +1,5 @@
 ﻿using System;
-using Assets.Scripts.Models.Config.Stages.Enums;
+using Assets.Scripts.ServiceModels.ConfigServiceModels.Stages.Enums;
 using Assets.Scripts.Utils;
 
 namespace Assets.Scripts.Extensions

@@ -1910,9 +1910,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1023194804}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2575920c60981a344b0339c84fee22bf, type: 3}
+  m_Script: {fileID: 11500000, guid: 188fa8ac1e0c4a843970456e838f099a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stars:
+  - {fileID: 1102660275}
+  - {fileID: 1096635430}
+  - {fileID: 1411189798}
 --- !u!1 &1028422700
 GameObject:
   m_ObjectHideFlags: 0
@@ -2039,9 +2043,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1096635430}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4653c5528e55a114280a0fa0c327e182, type: 3}
+  m_Script: {fileID: 11500000, guid: bd4a77053c05ec1449824676bfdbc0c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shapeGo: {fileID: 283923337}
+  fillGo: {fileID: 651169271}
 --- !u!1 &1102660275
 GameObject:
   m_ObjectHideFlags: 0
@@ -2089,9 +2095,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1102660275}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4653c5528e55a114280a0fa0c327e182, type: 3}
+  m_Script: {fileID: 11500000, guid: bd4a77053c05ec1449824676bfdbc0c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shapeGo: {fileID: 662560901}
+  fillGo: {fileID: 551288360}
 --- !u!1 &1116943914
 GameObject:
   m_ObjectHideFlags: 0
@@ -2560,9 +2568,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1368157361}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb88c8ceab6ae034abe0b7acb7e8b064, type: 3}
+  m_Script: {fileID: 11500000, guid: 6db5634729fe6bb4096e0c39e07fa4cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelGo: {fileID: 1028422700}
+  starsGo: {fileID: 1023194804}
+  scoreGo: {fileID: 1116943914}
+  bestScoreGo: {fileID: 185592415}
 --- !u!1 &1396625322
 GameObject:
   m_ObjectHideFlags: 0
@@ -2728,9 +2740,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1411189798}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4653c5528e55a114280a0fa0c327e182, type: 3}
+  m_Script: {fileID: 11500000, guid: bd4a77053c05ec1449824676bfdbc0c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shapeGo: {fileID: 351655227}
+  fillGo: {fileID: 1349703391}
 --- !u!1 &1459994464
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,27 +1,29 @@
-﻿using System;
-using System.IO;
-using Assets.Scripts.Models.Config.Stages;
+﻿using System.IO;
+using Assets.Scripts.ServiceModels.ConfigServiceModels.Stages;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Assets.Scripts.Services
 {
-    public class ConfigService
+    public class ConfigService : SingletonServiceBase<ConfigService>
     {
-        private void Test()
-        {
-            try
-            {
-                var stagesPath = Path.Combine(Application.dataPath, "Config/Stages.json");
-                var stagesFileContent = File.ReadAllText(stagesPath);
-                var stagesConfig = JsonConvert.DeserializeObject<StagesConfig>(stagesFileContent);
-                _stageInfo = stagesConfig.Stages[0];
+        private StagesConfig _stagesConfig;
 
-                RenderStage(_stageInfo);
-            }
-            catch (Exception exception)
-            {
-                Debug.Log(exception);
-            }
+        protected ConfigService() { }
+
+        public StagesConfig StagesConfig => _stagesConfig ?? ParseStages();
+
+        public static ConfigService Create()
+        {
+            return CreateInstance();
+        }
+
+        private StagesConfig ParseStages()
+        {
+            var stagesPath = Path.Combine(Application.dataPath, "Config/Stages.json");
+            var stagesFileContent = File.ReadAllText(stagesPath);
+            _stagesConfig = JsonConvert.DeserializeObject<StagesConfig>(stagesFileContent);
+            return _stagesConfig;
         }
     }
 }

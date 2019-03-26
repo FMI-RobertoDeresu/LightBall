@@ -1,34 +1,26 @@
-﻿using System.Collections;
+﻿using TMPro;
 using UnityEngine;
 
 namespace Assets.Scripts.Modules.Menu
 {
     public class LevelStar : MonoBehaviour
     {
-        private bool _ready;
-        private bool _show;
-        private bool _fill;
-
         public GameObject shapeGo;
         public GameObject fillGo;
 
-        public void BeforeStart(bool show, bool fill)
+        public void Display(bool show, bool fill)
         {
-            _show = show;
-            _fill = fill;
-            _ready = true;
+            shapeGo.SetActive(show);
+            fillGo.SetActive(fill);
         }
 
-        private void Start()
+        public void DisplayAsDisabled()
         {
-            StartCoroutine(Display());
-        }
+            var shapeText = shapeGo.GetComponent<TextMeshProUGUI>();
+            shapeText.color += Color.black * -0.5f;
 
-        private IEnumerator Display()
-        {
-            yield return new WaitUntil(() => _ready);
-            shapeGo.SetActive(_show);
-            fillGo.SetActive(_fill);
+            var fillText = fillGo.GetComponent<TextMeshProUGUI>();
+            fillText.color += Color.black * -0.5f;
         }
     }
 }

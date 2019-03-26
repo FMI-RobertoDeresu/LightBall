@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Models.Config.Stages;
+using Assets.Scripts.ModuleModels.Stage;
+using Assets.Scripts.ServiceModels.ConfigServiceModels.Stages;
+using Assets.Scripts.Services;
 using Assets.Scripts.Utils;
 using PathCreation;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.Modules.Stage
@@ -16,12 +17,14 @@ namespace Assets.Scripts.Modules.Stage
         private bool _ready;
         private float _percentTraveled;
         private VertexPath _roadPath;
-        private Models.Config.Stages.Stage _stageInfo;
+        private int _levelIndex;
+        private StageInfo _levelInfo;
         private List<RoadItem> _reachedRoadItems;
         private GameObject _currentCollisionPointsGo;
 
         private int _pointsPerItem;
         private int _totalPoints;
+        private int _missedBalls;
 
         private BallManager _ballManager;
 
@@ -34,10 +37,16 @@ namespace Assets.Scripts.Modules.Stage
         public Text totalPointsGo;
         public GameObject[] prefabs;
 
+        private void Awake()
+        {
+            _levelIndex = AppManager.Instance.AppContext.LevelToPlay;
+            _levelInfo = AppManager.Instance.ConfigService.StagesConfig.Stages[_levelIndex];
+        }
+
         private void Start()
         {
-            // resolve stage
-            RenderStage(null);
+            RenderStage(_levelInfo);
+            AppManager.Instance.SceneLoader.SceneIsReady();
         }
 
         private void Update()
@@ -47,7 +56,7 @@ namespace Assets.Scripts.Modules.Stage
 
             if (_ballManager.DistanceTraveled > 0)
             {
-                var offset = _stageInfo.Ball.StartOffset.Value;
+                var offset = _levelInfo.Ball.StartOffset.Value;
                 _percentTraveled = (_ballManager.DistanceTraveled) / (_roadPath.length - offset);
                 progressBarGo.value = _percentTraveled;
                 progressBarTextGo.text = $"{Convert.ToInt16(_percentTraveled * 100)}%";
@@ -57,17 +66,41 @@ namespace Assets.Scripts.Modules.Stage
                 totalPointsGo.text = _totalPoints.ToString();
         }
 
+        public void RenderStage(StageInfo stage)
+        {
+            _pointsPerItem = 0;
+            _totalPoints = 0;
+            _missedBalls = 0;
+            _reachedRoadItems = new List<RoadItem>();
+
+            _roadPath = new VertexPath(new BezierPath(stage.RoadPointsVector3));
+
+            var roadManager = roadGo.GetComponent<RoadManager>();
+            roadManager.RenderRoad(_roadPath, stage.RoadItems);
+
+            _ballManager = ballGo.GetComponent<BallManager>();
+            _ballManager.BeforeStart(
+                _roadPath,
+                stage.Ball.Speed.Value,
+                stage.Ball.InitialType.Value,
+                stage.Ball.StartOffset.Value,
+                OnBallCollision,
+                OnEndPortalReached);
+
+            _ready = true;
+        }
+
         private void OnBallCollision(GameObject roadItemGo)
         {
             var index = CommonUtils.GetEndingNumber(roadItemGo.name);
-            var ballRoadItem = _stageInfo.RoadItems[index];
-            var firstOfType = _stageInfo.RoadItems.FirstOrDefault(x =>
+            var ballRoadItem = _levelInfo.RoadItems[index];
+            var firstOfType = _levelInfo.RoadItems.FirstOrDefault(x =>
                 !_reachedRoadItems.Contains(x) && x.Type == _ballManager.CurrentType);
             var anyMissed = firstOfType != null && firstOfType.Position < ballRoadItem.Position;
 
             _pointsPerItem = !anyMissed
-                ? Math.Min(_pointsPerItem + _stageInfo.PointsIncrementPerItem.Value, _stageInfo.MaxPointsPerItem.Value)
-                : _stageInfo.PointsIncrementPerItem.Value;
+                ? Math.Min(_pointsPerItem + _levelInfo.PointsIncrementPerItem.Value, _levelInfo.MaxPointsPerItem.Value)
+                : _levelInfo.PointsIncrementPerItem.Value;
 
             _totalPoints += _pointsPerItem;
             StartCoroutine(ShowOnCollisionPoints(_pointsPerItem.ToString()));
@@ -105,35 +138,25 @@ namespace Assets.Scripts.Modules.Stage
 
         private void OnEndPortalReached()
         {
-            SceneManager.LoadScene(SceneNames.GameOver, LoadSceneMode.Single);
-            SceneManager.sceneLoaded += (scene, mode) =>
+            var playerData = AppManager.Instance.PlayerData.Data;
+            var stars = Mathf.Max(1, 3 - _missedBalls);
+            var bestScore = Math.Max(playerData.LevelsBestScore[_levelIndex], _totalPoints);
+
+            var gameOverInfo = new GameOverScreenInfo
             {
-                scene.isDirty 
+                LevelName = _levelInfo.Name,
+                Stars = stars,
+                Score = _totalPoints,
+                BestScore = bestScore
             };
-            // params to gameover scene
-        }
 
-        public void RenderStage(Models.Config.Stages.Stage stage)
-        {
-            _pointsPerItem = 0;
-            _totalPoints = 0;
-            _reachedRoadItems = new List<RoadItem>();
+            AppManager.Instance.AppContext.GameOverInfo = gameOverInfo;
+            StartCoroutine(AppManager.Instance.SceneLoader.LoadScene(SceneNames.GameOver, false));
 
-            _roadPath = new VertexPath(new BezierPath(stage.RoadPointsVector3));
-
-            var roadManager = roadGo.GetComponent<RoadManager>();
-            roadManager.RenderRoad(_roadPath, stage.RoadItems);
-
-            _ballManager = ballGo.GetComponent<BallManager>();
-            _ballManager.BeforeStart(
-                _roadPath,
-                stage.Ball.Speed.Value,
-                stage.Ball.InitialType.Value,
-                stage.Ball.StartOffset.Value,
-                OnBallCollision,
-                OnEndPortalReached);
-
-            _ready = true;
+            playerData.MaxPlayedLevel = Math.Max(playerData.MaxPlayedLevel, _levelIndex);
+            playerData.LevelsBestScore[_levelIndex] = bestScore;
+            playerData.LevelsStars[_levelIndex] = stars;
+            AppManager.Instance.PlayerData.SaveChanges();
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Models.Menu;
+using Assets.Scripts.ModuleModels.Menu;
+using Assets.Scripts.Services;
 using UnityEngine;
 
 namespace Assets.Scripts.Modules.Menu
@@ -13,39 +14,40 @@ namespace Assets.Scripts.Modules.Menu
 
         private void Start()
         {
-            var stages = new List<StageItem>
+            var stagesConfig = AppManager.Instance.ConfigService.StagesConfig;
+            var playerData = AppManager.Instance.PlayerData.Data;
+
+            var levels = new List<LevelItem>();
+            for (var index = 0; index < stagesConfig.Stages.Length; index++)
             {
-                new StageItem {Name = "Lvl. 1", Available = true, Played = true, Stars = 3},
-                new StageItem {Name = "Lvl. 2", Available = true, Played = true, Stars = 2},
-                new StageItem {Name = "Lvl. 3", Available = true, Played = true, Stars = 1},
-                new StageItem {Name = "Lvl. 4", Available = true, Played = true, Stars = 1},
-                new StageItem {Name = "Lvl. 5", Available = true, Played = true, Stars = 1},
-                new StageItem {Name = "Lvl. 6", Available = true, Played = true, Stars = 1},
-                new StageItem {Name = "Lvl. 7", Available = true, Played = true, Stars = 1},
-                new StageItem {Name = "Lvl. 8", Available = true, Played = true, Stars = 1},
-                new StageItem {Name = "Lvl. 9", Available = true, Played = true, Stars = 1},
-                new StageItem {Name = "Lvl. 10", Available = true, Played = true, Stars = 1},
-                new StageItem {Name = "Lvl. 11", Available = true, Played = true, Stars = 1},
-                new StageItem {Name = "Lvl. 12", Available = true, Played = true, Stars = 1}
-            };
+                var stageConfig = stagesConfig.Stages[index];
+                var levelItem = new LevelItem
+                {
+                    Name = stageConfig.Name,
+                    Available = index <= playerData.MaxPlayedLevel + 1,
+                    Stars = playerData.LevelsStars[index]
+                };
+                levels.Add(levelItem);
+            }
 
             var stageItemPrefab = prefabs.First(x => x.name == "MenuStageItem");
-            foreach (var stage in stages)
+            foreach (var level in levels)
             {
-                var stageIndex = stages.IndexOf(stage);
+                var stageIndex = levels.IndexOf(level);
                 var menuItemGo = Instantiate(stageItemPrefab, stagesListContentGo.transform);
 
                 var rectTransform = menuItemGo.transform.GetComponent<RectTransform>();
                 rectTransform.position = rectTransform.position + Vector3.down * 80 * stageIndex;
 
                 var menuItem = rectTransform.GetComponent<Level>();
-                menuItem.Show(stageIndex, stage.Name, stage.Stars);
+                menuItem.Show(stageIndex, level);
             }
 
             var rectTransformContent = stagesListContentGo.GetComponent<RectTransform>();
-            var newHeight = Math.Max(rectTransformContent.rect.height,
-                stages.Count * 80 - rectTransformContent.rect.height);
+            var newHeight = Math.Max(0, levels.Count * 80 - rectTransformContent.rect.height);
             rectTransformContent.sizeDelta = new Vector2(rectTransformContent.sizeDelta.x, newHeight);
+
+            AppManager.Instance.SceneLoader.SceneIsReady();
         }
     }
 }

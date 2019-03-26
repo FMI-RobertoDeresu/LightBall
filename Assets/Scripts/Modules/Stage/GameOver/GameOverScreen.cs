@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Services;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.Modules.Stage.GameOver
@@ -15,7 +16,7 @@ namespace Assets.Scripts.Modules.Stage.GameOver
         public GameObject scoreGo;
         public GameObject bestScoreGo;
 
-        void Start()
+        private void Awake()
         {
             _levelText = levelGo.GetComponent<Text>();
             _starsManager = starsGo.GetComponent<LevelStarsManager>();
@@ -23,12 +24,13 @@ namespace Assets.Scripts.Modules.Stage.GameOver
             _bestScoreText = bestScoreGo.GetComponent<Text>();
         }
 
-        public void Show(string levelTxt, int starsCount, int score, int bestScore)
+        public void Start()
         {
-            _levelText.text = levelTxt;
-            _starsManager.ShowStars(starsCount);
-            _scoreText.text = score.ToString();
-            _bestScoreText.text = $"Best score: {bestScore.ToString()}";
+            var info = AppManager.Instance.AppContext.GameOverInfo;
+            _levelText.text = info.LevelName;
+            _starsManager.ShowStars(info.Stars);
+            _scoreText.text = info.Score.ToString();
+            _bestScoreText.text = info.BestScore > 0 ? $"Best score: {info.BestScore.ToString()}" : string.Empty;
         }
     }
 }

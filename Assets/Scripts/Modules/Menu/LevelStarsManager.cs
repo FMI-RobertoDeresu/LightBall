@@ -1,18 +1,30 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Assets.Scripts.Modules.Menu
 {
     public class LevelStarsManager : MonoBehaviour
     {
-        public GameObject[] stars;
+        private IList<LevelStar> _stars;
+
+        public GameObject[] starsGo;
+
+        private void Awake()
+        {
+            _stars = starsGo.Select(x => x.GetComponent<LevelStar>()).ToList();
+        }
 
         public void ShowStars(int starsCount)
         {
-            for (var i = 0; i < stars.Length; i++)
-            {
-                var levelStar = stars[i].GetComponent<LevelStar>();
-                levelStar.BeforeStart(true, i < starsCount);
-            }
+            for (var i = 0; i < _stars.Count; i++)
+                _stars[i].Display(true, i < starsCount);
+        }
+
+        public void ShowStarsAsDisabled()
+        {
+            foreach (var star in _stars)
+                star.DisplayAsDisabled();
         }
     }
 }
