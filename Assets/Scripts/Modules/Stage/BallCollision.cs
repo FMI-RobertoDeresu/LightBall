@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Assets.Scripts.Models.Stages.Enums;
+using Assets.Scripts.Models.Config.Stages.Enums;
 using UnityEngine;
 
 namespace Assets.Scripts.Modules.Stage

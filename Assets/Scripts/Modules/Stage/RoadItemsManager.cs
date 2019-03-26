@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Assets.Scripts.Extensions;
-using Assets.Scripts.Models.Stages;
-using Assets.Scripts.Models.Stages.Enums;
+using Assets.Scripts.Models.Config.Stages;
+using Assets.Scripts.Models.Config.Stages.Enums;
 using PathCreation;
 using UnityEngine;
 

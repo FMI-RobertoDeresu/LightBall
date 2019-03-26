@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Assets.Scripts.Models.Stages;
+using Assets.Scripts.Models.Config.Stages;
 using Assets.Scripts.Utils;
-using Newtonsoft.Json;
 using PathCreation;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,7 +16,7 @@ namespace Assets.Scripts.Modules.Stage
         private bool _ready;
         private float _percentTraveled;
         private VertexPath _roadPath;
-        private Models.Stages.Stage _stageInfo;
+        private Models.Config.Stages.Stage _stageInfo;
         private List<RoadItem> _reachedRoadItems;
         private GameObject _currentCollisionPointsGo;
 
@@ -38,7 +36,8 @@ namespace Assets.Scripts.Modules.Stage
 
         private void Start()
         {
-            Test();
+            // resolve stage
+            RenderStage(null);
         }
 
         private void Update()
@@ -106,11 +105,15 @@ namespace Assets.Scripts.Modules.Stage
 
         private void OnEndPortalReached()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
-            Test();
+            SceneManager.LoadScene(SceneNames.GameOver, LoadSceneMode.Single);
+            SceneManager.sceneLoaded += (scene, mode) =>
+            {
+                scene.isDirty 
+            };
+            // params to gameover scene
         }
 
-        public void RenderStage(Models.Stages.Stage stage)
+        public void RenderStage(Models.Config.Stages.Stage stage)
         {
             _pointsPerItem = 0;
             _totalPoints = 0;
@@ -131,24 +134,6 @@ namespace Assets.Scripts.Modules.Stage
                 OnEndPortalReached);
 
             _ready = true;
-        }
-
-
-        private void Test()
-        {
-            try
-            {
-                var stagesPath = Path.Combine(Application.dataPath, "Config/Stages.json");
-                var stagesFileContent = File.ReadAllText(stagesPath);
-                var stagesConfig = JsonConvert.DeserializeObject<StagesConfig>(stagesFileContent);
-                _stageInfo = stagesConfig.Stages[0];
-
-                RenderStage(_stageInfo);
-            }
-            catch (Exception exception)
-            {
-                Debug.Log(exception);
-            }
         }
     }
 }

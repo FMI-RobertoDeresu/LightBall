@@ -1,6 +1,6 @@
-﻿using Assets.Scripts.Models.Stages.Enums;
+﻿using Assets.Scripts.Models.Config.Stages.Enums;
 
-namespace Assets.Scripts.Models.Stages
+namespace Assets.Scripts.Models.Config.Stages
 {
     public class RoadItem
     {

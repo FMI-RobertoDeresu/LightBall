@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-namespace Assets.Scripts.Models.Stages
+namespace Assets.Scripts.Models.Config.Stages
 {
     public class Stage
     {

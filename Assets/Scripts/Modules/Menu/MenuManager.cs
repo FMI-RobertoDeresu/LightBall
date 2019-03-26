@@ -45,7 +45,6 @@ namespace Assets.Scripts.Modules.Menu
             var rectTransformContent = stagesListContentGo.GetComponent<RectTransform>();
             var newHeight = Math.Max(rectTransformContent.rect.height,
                 stages.Count * 80 - rectTransformContent.rect.height);
-            Debug.Log(rectTransformContent.rect.height);
             rectTransformContent.sizeDelta = new Vector2(rectTransformContent.sizeDelta.x, newHeight);
         }
     }

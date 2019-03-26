@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Assets.Scripts.Models.Stages.Enums
+﻿namespace Assets.Scripts.Models.Config.Stages.Enums
 {
     public enum RoadItemSide
     {

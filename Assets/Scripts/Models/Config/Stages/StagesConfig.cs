@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Models.Stages
+﻿namespace Assets.Scripts.Models.Config.Stages
 {
     public class StagesConfig
     {

@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Models.Stages;
+﻿using Assets.Scripts.Models.Config.Stages;
 using PathCreation;
 using UnityEngine;
 
