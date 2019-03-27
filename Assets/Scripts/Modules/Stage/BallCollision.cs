@@ -15,26 +15,11 @@ namespace Assets.Scripts.Modules.Stage
 
         private void OnCollisionEnter(Collision col)
         {
-
-            var balls = new[]
-            {
-                RoadItemType.RedBall,
-                RoadItemType.BlueBall,
-                RoadItemType.YellowBall,
-                RoadItemType.PurpleBall
-            };
-            var objectIsBall = balls.Any(x => x.ToString() == col.gameObject.tag);
+            var objectIsBall = RoadItems.Balls.Any(x => x.ToString() == col.gameObject.tag);
             if (objectIsBall)
                 _ballManager.OnRoadItemBallCollision(col.gameObject);
 
-            var switches = new[]
-            {
-                RoadItemType.RedSwitch,
-                RoadItemType.BlueSwitch,
-                RoadItemType.YellowSwitch,
-                RoadItemType.PurpleSwitch
-            };
-            var objectIsSwitch = switches.Any(x => x.ToString() == col.gameObject.tag);
+            var objectIsSwitch = RoadItems.Switches.Any(x => x.ToString() == col.gameObject.tag);
             if (objectIsSwitch)
                 _ballManager.OnRoadItemSwitchCollision(col.gameObject);
 

@@ -81,7 +81,7 @@ namespace Assets.Scripts.Modules.Stage
             if (!_ready || !_canMove || _finished)
                 return;
 
-            DistanceTraveled += _speed * Time.deltaTime;
+            DistanceTraveled += _speed * 0.01f;;
             UpdateBallPosition(DistanceTraveled);
             UpdateCameraPosition(DistanceTraveled);
         }

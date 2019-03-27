@@ -46,8 +46,11 @@ namespace Assets.Scripts.Services
 
         public void SceneIsReady()
         {
-            var loaderManager = _loader.GetComponent<LoaderManager>();
-            loaderManager.FadeIn(null);
+            if (_loader != null)
+            {
+                var loaderManager = _loader.GetComponent<LoaderManager>();
+                loaderManager.FadeIn(null);
+            }
         }
     }
 }
