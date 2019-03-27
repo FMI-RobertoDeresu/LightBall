@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6113981871015881533}
   - component: {fileID: 6519617628302228664}
   m_Layer: 5
-  m_Name: Message
+  m_Name: LevelMessage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,7 +66,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 8702f4b546538764fa8cda8ec722c822, type: 3}
+    m_Font: {fileID: 12800000, guid: 291b28a02a6aba34f8b52b3bf9d9f2a3, type: 3}
     m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 0

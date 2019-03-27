@@ -5,7 +5,7 @@
 			"pointsIncrementPerItem": 1,
 			"maxPointsPerItem": 30,
 			"ball": {
-				"speed": 70,
+				"speed": 30,
 				"initialType" : "RedBall",
 				"startOffset": 15,			
 			},
