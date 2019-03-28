@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
-using Assets.Scripts.ServiceModels.ConfigServiceModels.Stages;
+using Assets.Scripts.ServiceModels.ConfigServiceModels.Levels;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -8,27 +8,27 @@ namespace Assets.Scripts.Services
 {
     public class ConfigService : SingletonServiceBase<ConfigService>
     {
-        private StagesConfig _stagesConfig;
+        private LevelsConfig _levelsConfig;
 
         protected ConfigService() { }
 
-        public StagesConfig StagesConfig => _stagesConfig ?? ParseStages();
+        public LevelsConfig LevelsConfig => _levelsConfig ?? ParseLevels();
 
         public static ConfigService Create()
         {
             return CreateInstance();
         }
 
-        private StagesConfig ParseStages()
+        private LevelsConfig ParseLevels()
         {
-            var stagesPath = Path.Combine(Application.dataPath, "Config/Stages.json");
-            var stagesFileContent = File.ReadAllText(stagesPath);
-            _stagesConfig = JsonConvert.DeserializeObject<StagesConfig>(stagesFileContent);
+            var levelsPath = Path.Combine(Application.dataPath, "Config/Levels.json");
+            var levelsFileContent = File.ReadAllText(levelsPath);
+            _levelsConfig = JsonConvert.DeserializeObject<LevelsConfig>(levelsFileContent);
 
-            foreach (var stageInfo in _stagesConfig.Stages)
-                stageInfo.RoadItems = stageInfo.RoadItems.OrderBy(x => x.Position.Value).ToArray();
+            foreach (var levelInfo in _levelsConfig.Levels)
+                levelInfo.Road.Items = levelInfo.Road.Items.OrderBy(x => x.Position.Value).ToArray();
                 
-            return _stagesConfig;
+            return _levelsConfig;
         }
     }
 }

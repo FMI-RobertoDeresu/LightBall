@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.ModuleModels.Stage;
-using Assets.Scripts.ServiceModels.ConfigServiceModels.Stages;
+﻿using Assets.Scripts.ModuleModels.Level;
 
 namespace Assets.Scripts.Services
 {

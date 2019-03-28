@@ -3,7 +3,7 @@
     public static class SceneNames
     {
         public const string Menu = "MenuScene";
-        public const string Stage = "StageScene";
+        public const string Level = "LevelScene";
         public const string GameOver = "GameOverScene";
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using Assets.Scripts.ServiceModels.ConfigServiceModels.Stages.Enums;
+using Assets.Scripts.ServiceModels.ConfigServiceModels.Levels.Enums;
 using Assets.Scripts.Utils;
 
 namespace Assets.Scripts.Extensions
@@ -31,6 +31,14 @@ namespace Assets.Scripts.Extensions
             }
 
             return materialName;
+        }
+
+        public static string GetDisolveMaterialName(this RoadItemType roadItemType)
+        {
+            var materialName = roadItemType.GetMaterialName();
+            var disolveMaterialName = $"{materialName} Disolve";
+
+            return disolveMaterialName;
         }
 
         public static string GetPrefabName(this RoadItemType roadItemType)

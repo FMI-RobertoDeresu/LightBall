@@ -42,7 +42,7 @@ namespace Assets.Scripts.Modules.Menu
         public void Play()
         {
             AppManager.Instance.AppContext.LevelToPlay = _index;
-            StartCoroutine(AppManager.Instance.SceneLoader.LoadScene(SceneNames.Stage));
+            StartCoroutine(AppManager.Instance.SceneLoader.LoadScene(SceneNames.Level));
         }
     }
 }
