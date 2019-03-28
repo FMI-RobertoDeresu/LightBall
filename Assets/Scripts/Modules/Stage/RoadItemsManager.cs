@@ -13,12 +13,12 @@ namespace Assets.Scripts.Modules.Stage
         public GameObject[] prefabs;
         public Material[] materials;
 
-        public void RenderItems(VertexPath roadPath, RoadItem[] roadItems)
+        public void RenderItems(VertexPath roadPath, RoadItem[] roadItems, float startOffset)
         {
             for (var i = 0; i < roadItems.Length; i++)
             {
                 var roadItem = roadItems[i];
-                var roadItemPosition = roadItem.Position.Value;
+                var roadItemPosition = roadItem.Position.Value + startOffset;
                 var pointPosition = roadPath.GetPoint(roadItemPosition);
                 var pointRotationAngles = roadPath.GetRotation(roadItemPosition).eulerAngles;
 

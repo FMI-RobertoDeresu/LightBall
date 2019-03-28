@@ -14,19 +14,21 @@ namespace Assets.Scripts.Modules.Stage
 {
     public class StageManager : MonoBehaviour
     {
-        private bool _ready;
-        private float _percentTraveled;
         private VertexPath _roadPath;
         private int _levelIndex;
         private StageInfo _levelInfo;
-        private List<RoadItem> _reachedRoadItems;
-        private GameObject _currentCollisionPointsGo;
 
         private int _pointsPerItem;
         private int _totalPoints;
-        private int _missedBalls;
+
+        private List<RoadItem> _ballsToReach;
+        private bool[] _ballsToReachStatus;
+
+        private GameObject _currentMessageGo;
+        private GameObject _currentCollisionPointsGo;
 
         private BallManager _ballManager;
+        private Text _messageComponent;
 
         [Header("Stage objects")]
         public GameObject roadGo;
@@ -41,77 +43,100 @@ namespace Assets.Scripts.Modules.Stage
         {
             _levelIndex = AppManager.Instance.AppContext.LevelToPlay;
             _levelInfo = AppManager.Instance.ConfigService.StagesConfig.Stages[_levelIndex];
+
+            _pointsPerItem = 0;
+            _totalPoints = 0;
+
+            _ballsToReach = StageUtils.GetBallsToReach(_levelInfo);
+            _ballsToReachStatus = new bool[_ballsToReach.Count];
+
+            _roadPath = new VertexPath(new BezierPath(_levelInfo.Road.PointsVector3));
+
+            var roadManager = roadGo.GetComponent<RoadManager>();
+            roadManager.RenderRoad(_roadPath, _levelInfo.Road);
+
+            _ballManager = ballGo.GetComponent<BallManager>();
+            _ballManager.Init(_roadPath, _levelInfo.Ball, OnBallCollision, OnBallOvercome, OnEndPortalReached);
         }
 
         private void Start()
         {
-            RenderStage(_levelInfo);
             AppManager.Instance.SceneLoader.SceneIsReady();
         }
 
         private void Update()
         {
-            if (!_ready)
-                return;
-
-            if (_ballManager.DistanceTraveled > 0)
-            {
-                var offset = _levelInfo.Road.StartOffset.Value + _levelInfo.Road.EndOffset.Value;
-                _percentTraveled = (_ballManager.DistanceTraveled) / (_roadPath.length - offset);
-                progressBarGo.value = _percentTraveled;
-                progressBarTextGo.text = $"{Convert.ToInt16(_percentTraveled * 100)}%";
-            }
+            // progress and points
+            var offset = _levelInfo.Road.StartOffset.Value;
+            var progress = _ballManager.DistanceTraveled / (_roadPath.length - offset);
+            progressBarGo.value = progress;
+            progressBarTextGo.text = $"{Convert.ToInt16(progress * 100)}%";
 
             if (_totalPoints > 0)
                 totalPointsGo.text = _totalPoints.ToString();
-        }
-
-        public void RenderStage(StageInfo stage)
-        {
-            _pointsPerItem = 0;
-            _totalPoints = 0;
-            _missedBalls = 0;
-            _reachedRoadItems = new List<RoadItem>();
-
-            _roadPath = new VertexPath(new BezierPath(stage.RoadPointsVector3));
-
-            var roadManager = roadGo.GetComponent<RoadManager>();
-            roadManager.RenderRoad(_roadPath, stage.RoadItems);
-
-            _ballManager = ballGo.GetComponent<BallManager>();
-            _ballManager.BeforeStart(
-                _roadPath,
-                stage.Ball.Speed.Value,
-                stage.Ball.InitialType.Value,
-                stage.Ball.StartOffset.Value,
-                OnBallCollision,
-                OnEndPortalReached);
-
-            _ready = true;
         }
 
         private void OnBallCollision(GameObject roadItemGo)
         {
             var index = CommonUtils.GetEndingNumber(roadItemGo.name);
             var ballRoadItem = _levelInfo.Road.Items[index];
-            var firstOfType = _levelInfo.Road.Items.FirstOrDefault(x =>
-                !_reachedRoadItems.Contains(x) && x.Type == _ballManager.CurrentType);
-            var anyMissed = firstOfType != null && firstOfType.Position < ballRoadItem.Position;
 
-            _pointsPerItem = !anyMissed
+            if (ballRoadItem.Type == _ballManager.CurrentType)
+                OnCorrectBallCollision(roadItemGo, ballRoadItem);
+            else
+                OnWronBallCollision();
+        }
+
+        private void OnBallOvercome(GameObject roadItemGo)
+        {
+            var index = CommonUtils.GetEndingNumber(roadItemGo.name);
+            var ballRoadItem = _levelInfo.Road.Items[index];
+            if (ballRoadItem.Type == _ballManager.CurrentType)
+                StartCoroutine(ShowMessage("Miss"));
+        }
+
+        private void OnCorrectBallCollision(GameObject roadItemGo, RoadItem ballRoadItem)
+        {
+            var index = _ballsToReach.IndexOf(ballRoadItem);
+            _ballsToReachStatus[index] = true;
+
+            var lastMissed = index > 0 && !_ballsToReachStatus[index - 1];
+            _pointsPerItem = !lastMissed
                 ? Math.Min(_pointsPerItem + _levelInfo.PointsIncrementPerItem.Value, _levelInfo.MaxPointsPerItem.Value)
                 : _levelInfo.PointsIncrementPerItem.Value;
 
             _totalPoints += _pointsPerItem;
-            StartCoroutine(ShowOnCollisionPoints(_pointsPerItem.ToString()));
 
-            _reachedRoadItems.Add(ballRoadItem);
+            StartCoroutine(ShowOnCollisionPoints(_pointsPerItem.ToString()));
             Destroy(roadItemGo);
+        }
+
+        private void OnWronBallCollision()
+        {
+            ShowGameOver(false);
+        }
+
+        private void OnEndPortalReached()
+        {
+            ShowGameOver(true);
+        }
+
+        private IEnumerator ShowMessage(string value)
+        {
+            if (_currentMessageGo != null)
+                Destroy(_currentMessageGo);
+
+            var messagePrefab = prefabs.First(x => x.name == "LevelMessage");
+            _currentMessageGo = Instantiate(messagePrefab, screenGo.transform);
+            _currentMessageGo.GetComponent<Text>().text = value;
+
+            yield return new WaitForSeconds(1);
+            Destroy(_currentMessageGo);
         }
 
         private IEnumerator ShowOnCollisionPoints(string value)
         {
-            var collisionPointsPrefab = prefabs.First(x => x.name == "CollisionPoints");
+            var collisionPointsPrefab = prefabs.First(x => x.name == "LevelCollisionPoints");
             var collisionPointsGo = Instantiate(collisionPointsPrefab);
             collisionPointsGo.transform.SetParent(screenGo.transform, false);
             collisionPointsGo.GetComponent<Text>().text = "+" + value;
@@ -136,10 +161,11 @@ namespace Assets.Scripts.Modules.Stage
             Destroy(collisionPointsGo);
         }
 
-        private void OnEndPortalReached()
+        private void ShowGameOver(bool finshed)
         {
             var playerData = AppManager.Instance.PlayerData.Data;
-            var stars = Mathf.Max(1, 3 - _missedBalls);
+            var missedBalls = _ballsToReachStatus.Count(x => !x);
+            var stars = finshed ? Mathf.Max(1, 3 - missedBalls) : 0;
             var bestScore = Math.Max(playerData.LevelsBestScore[_levelIndex], _totalPoints);
 
             var gameOverInfo = new GameOverScreenInfo

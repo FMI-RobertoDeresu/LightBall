@@ -5,7 +5,6 @@ namespace Assets.Scripts.Modules.Stage
 {
     public class BallPlayerActions : MonoBehaviour
     {
-        private bool _ready;
         private BallManager _ballManager;
 
         private float _moveTolerance;
@@ -15,20 +14,16 @@ namespace Assets.Scripts.Modules.Stage
         private Vector3? _lastMousePosition;
         private Vector3? _lastTouchPosition;
 
-        public void BeforeStart()
+        public void Awake()
         {
             _ballManager = GetComponent<BallManager>();
             _moveTolerance = 0.1f;
             _mouseMoveFactor = 0.03f;
             _touchMoveFactor = 0.03f;
-            _ready = true;
         }
 
         private void Update()
         {
-            if (!_ready)
-                return;
-
             if (Input.mousePresent)
                 CheckForMouseActions();
 
@@ -51,7 +46,7 @@ namespace Assets.Scripts.Modules.Stage
                 if (Math.Abs(direction.x) > _moveTolerance)
                 {
                     var change = direction.x * _mouseMoveFactor;
-                    _ballManager.UpdatePosition(change);
+                    _ballManager.OnUpdatePosition(change);
                 }
             }
 
@@ -73,7 +68,7 @@ namespace Assets.Scripts.Modules.Stage
                 if (Math.Abs(direction.x) > _moveTolerance)
                 {
                     var change = direction.x * _touchMoveFactor;
-                    _ballManager.UpdatePosition(change);
+                    _ballManager.OnUpdatePosition(change);
                 }
             }
 

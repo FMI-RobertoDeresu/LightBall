@@ -1,5 +1,16 @@
-﻿namespace Assets.Scripts.ServiceModels.ConfigServiceModels.Stages.Enums
+﻿using System.Collections.Generic;
+
+namespace Assets.Scripts.ServiceModels.ConfigServiceModels.Stages.Enums
 {
+    public class RoadItems
+    {
+        public static List<RoadItemType> Balls =>
+            new List<RoadItemType> { RoadItemType.RedBall, RoadItemType.BlueBall, RoadItemType.YellowBall, RoadItemType.PurpleBall };
+
+        public static List<RoadItemType> Switches =>
+            new List<RoadItemType> { RoadItemType.RedSwitch, RoadItemType.BlueSwitch, RoadItemType.YellowSwitch, RoadItemType.PurpleSwitch };
+    }
+
     public enum RoadItemType
     {
         RedBall,

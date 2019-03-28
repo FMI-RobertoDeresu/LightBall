@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.ServiceModels.ConfigServiceModels.Stages;
 using Assets.Scripts.ServiceModels.ConfigServiceModels.Stages.Enums;
 using Assets.Scripts.Utils;
 using PathCreation;
@@ -16,11 +17,9 @@ namespace Assets.Scripts.Modules.Stage
 
         private VertexPath _path;
         private float _onRoadPos;
-        private float _speed;
-        private RoadItemType _ballType;
-        private float _startOffset;
-
+        private BallConfig _config;
         private Action<GameObject> _onBallCollision;
+        private Action<GameObject> _onBallOvercome;
         private Action _onEndPortalReached;
 
         [Header("Ball")]
@@ -36,44 +35,23 @@ namespace Assets.Scripts.Modules.Stage
         public RoadItemType CurrentType { get; private set; }
         public Vector3 Position { get; private set; }
 
-        public void BeforeStart(
-            VertexPath path,
-            float speed,
-            RoadItemType ballType,
-            float startOffset,
-            Action<GameObject> onBallCollision,
-            Action onEndPortalReached)
+        public void Init(VertexPath path, BallConfig config, Action<GameObject> onBallCollision, Action<GameObject> onBallOvercome, Action onEndPortalReached)
         {
             _onRoadPos = 0;
             DistanceTraveled = 0;
 
             _path = path;
-            _speed = speed;
-            _ballType = ballType;
-            _startOffset = startOffset;
+            _config = config;
             _onBallCollision = onBallCollision;
+            _onBallOvercome = onBallOvercome;
             _onEndPortalReached = onEndPortalReached;
 
-            CurrentType = _ballType;
+            CurrentType = config.InitialType.Value;
             UpdateBallPosition(DistanceTraveled);
             UpdateCameraPosition(DistanceTraveled);
 
-            var ballAction = GetComponent<BallPlayerActions>();
-            ballAction.BeforeStart();
-
             _canMove = !waitForTouch;
             _ready = true;
-        }
-
-        public void UpdatePosition(float change)
-        {
-            if (_canMove == false)
-            {
-                _canMove = true;
-                return;
-            }
-
-            _onRoadPos = Math.Max(-1f, Math.Min(1f, _onRoadPos + change));
         }
 
         private void Update()
@@ -81,15 +59,15 @@ namespace Assets.Scripts.Modules.Stage
             if (!_ready || !_canMove || _finished)
                 return;
 
-            DistanceTraveled += _speed * Time.deltaTime;
+            DistanceTraveled += _config.Speed.Value * 0.01f;
             UpdateBallPosition(DistanceTraveled);
             UpdateCameraPosition(DistanceTraveled);
         }
 
         private void UpdateBallPosition(float distanceTraveled)
         {
-            var pathPointPosition = _path.GetPointAtDistance(distanceTraveled + _startOffset);
-            var pathPointRotation = _path.GetRotationAtDistance(distanceTraveled + _startOffset);
+            var pathPointPosition = _path.GetPointAtDistance(distanceTraveled + _config.StartOffset.Value);
+            var pathPointRotation = _path.GetRotationAtDistance(distanceTraveled + _config.StartOffset.Value);
 
             var ballPosition = pathPointPosition + Vector3.up * 0.5f + Vector3.right * _onRoadPos * 2f;
             var ballRotationAngles = new Vector3(
@@ -102,8 +80,8 @@ namespace Assets.Scripts.Modules.Stage
 
         private void UpdateCameraPosition(float distanceTraveled)
         {
-            var pathPointPosition = _path.GetPointAtDistance(distanceTraveled + _startOffset);
-            var pathPointRotation = _path.GetRotationAtDistance(distanceTraveled + _startOffset);
+            var pathPointPosition = _path.GetPointAtDistance(distanceTraveled + _config.StartOffset.Value);
+            var pathPointRotation = _path.GetRotationAtDistance(distanceTraveled + _config.StartOffset.Value);
 
             var cameraPosition = pathPointPosition + Vector3.right * _onRoadPos * 0f;
             var cameraRotationAngles = pathPointRotation.eulerAngles + Vector3.forward * 90 + ballCameraInitRotation;
@@ -111,12 +89,28 @@ namespace Assets.Scripts.Modules.Stage
             ballCamera.transform.Translate(ballCameraInitPosition);
         }
 
-        public void OnRoadItemBallCollision(GameObject roadItemBall)
+        public void OnUpdatePosition(float change)
+        {
+            if (!_canMove && !_finished)
+            {
+                _canMove = true;
+                return;
+            }
+
+            _onRoadPos = Math.Max(-1f, Math.Min(1f, _onRoadPos + change));
+        }
+
+        public void OnBallCollision(GameObject roadItemBall)
         {
             _onBallCollision(roadItemBall);
         }
 
-        public void OnRoadItemSwitchCollision(GameObject roadItemSwitch)
+        public void OnBallOvercome(GameObject roadItemBall)
+        {
+            _onBallOvercome(roadItemBall);
+        }
+
+        public void OnSwitchCollision(GameObject roadItemSwitch)
         {
             var roadSwitchType = EnumUtils.Parse<RoadItemType>(roadItemSwitch.tag);
             var meshRenderer = GetComponent<MeshRenderer>();
@@ -135,5 +129,7 @@ namespace Assets.Scripts.Modules.Stage
             _finished = true;
             _onEndPortalReached();
         }
+
+
     }
 }

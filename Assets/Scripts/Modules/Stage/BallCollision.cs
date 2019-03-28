@@ -8,39 +8,35 @@ namespace Assets.Scripts.Modules.Stage
     {
         private BallManager _ballManager;
 
-        private void Start()
+        private void Awake()
         {
             _ballManager = GetComponent<BallManager>();
         }
 
         private void OnCollisionEnter(Collision col)
         {
-
-            var balls = new[]
+            var isSphereCollider = col.contacts[0].thisCollider is SphereCollider;
+            if (isSphereCollider)
             {
-                RoadItemType.RedBall,
-                RoadItemType.BlueBall,
-                RoadItemType.YellowBall,
-                RoadItemType.PurpleBall
-            };
-            var objectIsBall = balls.Any(x => x.ToString() == col.gameObject.tag);
+                var objectIsBall = RoadItems.Balls.Any(x => x.ToString() == col.gameObject.tag);
+                if (objectIsBall)
+                    _ballManager.OnBallCollision(col.gameObject);
+
+                var objectIsSwitch = RoadItems.Switches.Any(x => x.ToString() == col.gameObject.tag);
+                if (objectIsSwitch)
+                    _ballManager.OnSwitchCollision(col.gameObject);
+
+                var objectIsPortal = col.gameObject.tag == RoadItemType.Portal.ToString();
+                if (objectIsPortal)
+                    _ballManager.OnPortalCollision(col.gameObject);
+            }
+        }
+
+        private void OnCollisionExit(Collision col)
+        {
+            var objectIsBall = RoadItems.Balls.Any(x => x.ToString() == col.gameObject.tag);
             if (objectIsBall)
-                _ballManager.OnRoadItemBallCollision(col.gameObject);
-
-            var switches = new[]
-            {
-                RoadItemType.RedSwitch,
-                RoadItemType.BlueSwitch,
-                RoadItemType.YellowSwitch,
-                RoadItemType.PurpleSwitch
-            };
-            var objectIsSwitch = switches.Any(x => x.ToString() == col.gameObject.tag);
-            if (objectIsSwitch)
-                _ballManager.OnRoadItemSwitchCollision(col.gameObject);
-
-            var objectIsPortal = col.gameObject.tag == RoadItemType.Portal.ToString();
-            if (objectIsPortal)
-                _ballManager.OnPortalCollision(col.gameObject);
+                _ballManager.OnBallOvercome(col.gameObject);
         }
     }
 }
