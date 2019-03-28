@@ -6,6 +6,5 @@ namespace Assets.Scripts.ServiceModels.ConfigServiceModels.Stages
     {
         public float? Speed { get; set; }
         public RoadItemType? InitialType { get; set; }
-        public float? StartOffset { get; set; }
     }
 }

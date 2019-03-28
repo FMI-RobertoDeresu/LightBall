@@ -56,7 +56,7 @@ namespace Assets.Scripts.Modules.Stage
 
             if (_ballManager.DistanceTraveled > 0)
             {
-                var offset = _levelInfo.Ball.StartOffset.Value;
+                var offset = _levelInfo.Road.StartOffset.Value + _levelInfo.Road.EndOffset.Value;
                 _percentTraveled = (_ballManager.DistanceTraveled) / (_roadPath.length - offset);
                 progressBarGo.value = _percentTraveled;
                 progressBarTextGo.text = $"{Convert.ToInt16(_percentTraveled * 100)}%";
@@ -93,8 +93,8 @@ namespace Assets.Scripts.Modules.Stage
         private void OnBallCollision(GameObject roadItemGo)
         {
             var index = CommonUtils.GetEndingNumber(roadItemGo.name);
-            var ballRoadItem = _levelInfo.RoadItems[index];
-            var firstOfType = _levelInfo.RoadItems.FirstOrDefault(x =>
+            var ballRoadItem = _levelInfo.Road.Items[index];
+            var firstOfType = _levelInfo.Road.Items.FirstOrDefault(x =>
                 !_reachedRoadItems.Contains(x) && x.Type == _ballManager.CurrentType);
             var anyMissed = firstOfType != null && firstOfType.Position < ballRoadItem.Position;
 

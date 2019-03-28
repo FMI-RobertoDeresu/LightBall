@@ -11,10 +11,6 @@ namespace Assets.Scripts.ServiceModels.ConfigServiceModels.Stages
         public int? MaxPointsPerItem { get; set; }
 
         public BallConfig Ball { get; set; }
-
-        public RoadPoint[] RoadPoints { get; set; }
-        public RoadItem[] RoadItems { get; set; }
-
-        public Vector3[] RoadPointsVector3 => RoadPoints.Select(x => x.ToVector3).ToArray();
+        public RoadConfig Road { get; set; }
     }
 }
