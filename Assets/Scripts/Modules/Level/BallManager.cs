@@ -59,11 +59,11 @@ namespace Assets.Scripts.Modules.Level
         private void Awake()
         {
             _meshRenderer = GetComponent<MeshRenderer>();
+            ChangeBallColor(CurrentType);
         }
 
         private void Update()
         {
-            Debug.Log("Time Since Loaded : " + Time.timeSinceLevelLoad);
             if (!_touched || !_canMove || _finished)
                 return;
 
@@ -95,6 +95,15 @@ namespace Assets.Scripts.Modules.Level
             var cameraRotationAngles = pathPointRotation.eulerAngles + Vector3.forward * 90 + ballCameraInitRotation;
             ballCamera.transform.SetPositionAndRotation(cameraPosition, Quaternion.Euler(cameraRotationAngles));
             ballCamera.transform.Translate(ballCameraInitPosition);
+        }
+
+        private void ChangeBallColor(RoadItemType ballTypeAfterSwitch)
+        {
+            var materialName = ballTypeAfterSwitch.GetMaterialName();
+            var roadItemBallMaterial = materials.First(x => x.name == materialName);
+
+            _meshRenderer.material = roadItemBallMaterial;
+            CurrentType = ballTypeAfterSwitch;
         }
 
         public void UpdatePosition(float change)
@@ -129,11 +138,7 @@ namespace Assets.Scripts.Modules.Level
             var roadSwitchType = EnumUtils.Parse<RoadItemType>(roadItemSwitch.tag);
 
             var ballTypeAfterSwitch = roadSwitchType.GetSwitchBallType();
-            var materialName = ballTypeAfterSwitch.GetMaterialName();
-            var roadItemBallMaterial = materials.First(x => x.name == materialName);
-
-            _meshRenderer.material = roadItemBallMaterial;
-            CurrentType = ballTypeAfterSwitch;
+            ChangeBallColor(ballTypeAfterSwitch);
         }
 
         public void OnPortalCollision(GameObject colGameObject)

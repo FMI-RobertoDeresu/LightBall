@@ -5,7 +5,7 @@
 			"pointsIncrementPerItem": 1,
 			"maxPointsPerItem": 30,
 			"ball": {
-				"speed": 30,
+				"speed": 50,
 				"initialType" : "RedBall",
 				"startOffset": 15,
 			},
@@ -267,7 +267,7 @@
 			"pointsIncrementPerItem": 2,
 			"maxPointsPerItem": 30,
 			"ball": {
-				"speed": 35,
+				"speed": 60,
 				"initialType" : "BlueBall",
 				"startOffset": 15
 			},
@@ -318,16 +318,7 @@
 					{ "position": 0.180, "type": "PurpleBall", "side": "Right" },
 					
 					{ "position": 0.190, "type": "PurpleSwitch", "side": "Center" },
-					
-					{ "position": 0.200, "type": "RedBall", "side": "Left" },
-					{ "position": 0.200, "type": "BlueBall", "side": "Center" },
-					{ "position": 0.200, "type": "PurpleBall", "side": "Right" },
-					{ "position": 0.210, "type": "RedBall", "side": "Left" },
-					{ "position": 0.210, "type": "BlueBall", "side": "Center" },
-					{ "position": 0.210, "type": "PurpleBall", "side": "Right" },
-					{ "position": 0.220, "type": "RedBall", "side": "Left" },
-					{ "position": 0.220, "type": "BlueBall", "side": "Center" },
-					{ "position": 0.220, "type": "PurpleBall", "side": "Right" },
+				
 					{ "position": 0.230, "type": "RedBall", "side": "Left" },
 					{ "position": 0.230, "type": "BlueBall", "side": "Center" },
 					{ "position": 0.230, "type": "PurpleBall", "side": "Right" },

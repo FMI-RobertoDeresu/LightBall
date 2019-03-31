@@ -113,7 +113,7 @@ namespace Assets.Scripts.Modules.Level
         private void OnWrongBallCollision()
         {
             _ballManager.OnWrongBallCollision();
-            //ShowGameOver(false);
+            StartCoroutine(ShowGameOverAfter(1, false));
         }
 
         private void OnEndPortalReached()
@@ -161,11 +161,17 @@ namespace Assets.Scripts.Modules.Level
             Destroy(collisionPointsGo);
         }
 
-        private void ShowGameOver(bool finshed)
+        private IEnumerator ShowGameOverAfter(float seconds, bool finished)
+        {
+            yield return new WaitForSeconds(seconds);
+            ShowGameOver(finished);
+        }
+
+        private void ShowGameOver(bool finished)
         {
             var playerData = AppManager.Instance.PlayerData.Data;
             var missedBalls = _ballsToReachStatus.Count(x => !x);
-            var stars = finshed ? Mathf.Max(1, 3 - missedBalls) : 0;
+            var stars = finished ? Mathf.Max(1, 3 - missedBalls) : 0;
             var bestScore = Math.Max(playerData.LevelsBestScore[_levelIndex], _totalPoints);
 
             var gameOverInfo = new GameOverScreenInfo
@@ -180,8 +186,8 @@ namespace Assets.Scripts.Modules.Level
             StartCoroutine(AppManager.Instance.SceneLoader.LoadScene(SceneNames.GameOver, false));
 
             playerData.MaxPlayedLevel = Math.Max(playerData.MaxPlayedLevel, _levelIndex);
-            playerData.LevelsBestScore[_levelIndex] = bestScore;
-            playerData.LevelsStars[_levelIndex] = stars;
+            playerData.LevelsBestScore[_levelIndex] = Math.Max(playerData.LevelsBestScore[_levelIndex], bestScore);
+            playerData.LevelsStars[_levelIndex] = Math.Max(playerData.LevelsStars[_levelIndex], stars);
             AppManager.Instance.PlayerData.SaveChanges();
         }
     }
