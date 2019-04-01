@@ -4,24 +4,15 @@ using UnityEngine;
 
 namespace Assets.Scripts.Modules
 {
-    public class Startup : MonoBehaviour
+    public class Startup : SingletonScript<Startup>
     {
         public GameObject[] prefabs;
 
-        public static Startup Instance { get; private set; }
-
         private void Awake()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
+            var isFirstInstance = SetInstance();
+            if (isFirstInstance)
                 OnStart();
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
         }
 
         private void OnStart()

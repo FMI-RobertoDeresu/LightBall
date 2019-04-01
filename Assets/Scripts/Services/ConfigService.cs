@@ -21,8 +21,7 @@ namespace Assets.Scripts.Services
 
         private LevelsConfig ParseLevels()
         {
-            var levelsPath = Path.Combine(Application.dataPath, "Config/Levels.json");
-            var levelsFileContent = File.ReadAllText(levelsPath);
+            var levelsFileContent = Resources.Load<TextAsset>("Levels").ToString();
             _levelsConfig = JsonConvert.DeserializeObject<LevelsConfig>(levelsFileContent);
 
             foreach (var levelInfo in _levelsConfig.Levels)
