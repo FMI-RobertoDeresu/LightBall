@@ -47,7 +47,6 @@ namespace Assets.Scripts.Modules.Level
             _onBallOvercome = onBallOvercome;
             _onEndPortalReached = onEndPortalReached;
 
-
             _onRoadPos = 0;
             DistanceTraveled = 0;
             CurrentType = config.InitialType.Value;

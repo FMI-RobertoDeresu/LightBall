@@ -144,6 +144,7 @@ namespace Assets.Scripts.Modules.Level
             collisionPointsGo.GetComponent<Text>().text = "+" + value;
 
             _currentCollisionPointsGo = collisionPointsGo;
+            var rectTransform = collisionPointsGo.GetComponent<RectTransform>();
 
             var progress = 0f;
             while (progress <= 1f)
@@ -153,9 +154,11 @@ namespace Assets.Scripts.Modules.Level
                     break;
 
                 progress += 0.05f;
-                var position = _ballManager.ballCamera.WorldToScreenPoint(_ballManager.Position);
-                position.y += 30 + progress * 25;
-                collisionPointsGo.transform.position = position;
+
+                var position = _ballManager.ballCamera.WorldToScreenPoint(_ballManager.Position) / screenGo.scaleFactor;
+                position.y += 30 + progress * 20;
+
+                rectTransform.anchoredPosition = position;
                 collisionPointsGo.transform.localScale *= 1.0025f;
                 yield return new WaitForSeconds(0.01f);
             }
