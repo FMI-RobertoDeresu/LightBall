@@ -37,7 +37,9 @@ namespace Assets.Scripts.Modules.Menu
                 var menuItemGo = Instantiate(levelItemPrefab, levelsListContentGo.transform);
 
                 var rectTransform = menuItemGo.transform.GetComponent<RectTransform>();
-                rectTransform.position = rectTransform.position + Vector3.down * 80 * levelIndex;
+                var rect = rectTransform.rect;
+                var pos = new Vector3(0, -(rect.height + 10) * levelIndex - rect.height / 2);
+                rectTransform.anchoredPosition = pos;
 
                 var menuItem = rectTransform.GetComponent<Level>();
                 menuItem.Show(levelIndex, level);

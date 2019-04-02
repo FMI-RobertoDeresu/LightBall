@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using Assets.Scripts.Services;
 using UnityEngine;
 
@@ -18,6 +19,16 @@ namespace Assets.Scripts.Modules
         private void OnStart()
         {
             AppManager.Create(prefabs);
+            //StartCoroutine(DebugInfo());
+        }
+
+        public IEnumerator DebugInfo()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(1);
+                Debug.Log("Frame rate: " + 1.0f / Time.deltaTime);
+            }
         }
     }
 }

@@ -12,14 +12,14 @@ namespace Assets.Scripts.Modules.Level
         private float _touchMoveFactor;
 
         private Vector3? _lastMousePosition;
-        private Vector3? _lastTouchPosition;
+        private Vector2? _lastTouchPosition;
 
         public void Awake()
         {
             _ballManager = GetComponent<BallManager>();
             _moveTolerance = 0.1f;
-            _mouseMoveFactor = 0.03f;
-            _touchMoveFactor = 0.03f;
+            _mouseMoveFactor = 0.005f;
+            _touchMoveFactor = 0.008f;
         }
 
         private void Update()
@@ -46,7 +46,7 @@ namespace Assets.Scripts.Modules.Level
                 if (Math.Abs(direction.x) > _moveTolerance)
                 {
                     var change = direction.x * _mouseMoveFactor;
-                    _ballManager.UpdatePosition(change);
+                    _ballManager.UpdateLeftRightPosition(change);
                 }
             }
 
@@ -61,14 +61,14 @@ namespace Assets.Scripts.Modules.Level
                 return;
             }
 
-            var touchPosition = Input.mousePosition;
-            if (_lastMousePosition != null)
+            var touchPosition = Input.touches[0].position;
+            if (_lastTouchPosition != null)
             {
                 var direction = (touchPosition - _lastTouchPosition.Value);
                 if (Math.Abs(direction.x) > _moveTolerance)
                 {
                     var change = direction.x * _touchMoveFactor;
-                    _ballManager.UpdatePosition(change);
+                    _ballManager.UpdateLeftRightPosition(change);
                 }
             }
 

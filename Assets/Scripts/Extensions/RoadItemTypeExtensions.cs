@@ -6,6 +6,26 @@ namespace Assets.Scripts.Extensions
 {
     public static class RoadItemTypeExtensions
     {
+
+        public static int GetLayerValue(this RoadItemType roadItemType)
+        {
+            int layer;
+            switch (roadItemType)
+            {
+                case RoadItemType.RedSwitch:
+                case RoadItemType.BlueSwitch:
+                case RoadItemType.YellowSwitch:
+                case RoadItemType.PurpleSwitch:
+                    layer = 9;
+                    break;
+                default:
+                    layer = 0;
+                    break;
+            }
+
+            return layer;
+        }
+
         public static string GetMaterialName(this RoadItemType roadItemType)
         {
             string materialName;

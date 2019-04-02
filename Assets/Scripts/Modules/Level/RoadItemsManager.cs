@@ -33,6 +33,7 @@ namespace Assets.Scripts.Modules.Level
                 var roadItemGo = Instantiate(prefab);
                 roadItemGo.name = "RoadItem_ " + i;
                 roadItemGo.tag = roadItem.Type.ToString();
+                roadItemGo.layer = roadItem.Type.Value.GetLayerValue();
 
                 // position and rotation
                 var side = (roadItem.Side == RoadItemSide.Left ? -1f : 0f) * 2 +

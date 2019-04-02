@@ -67,7 +67,9 @@ namespace Assets.Scripts.Modules.Level
         private void Update()
         {
             // progress and points
-            var progress = _ballManager.DistanceTraveled / (_roadPath.length - _levelInfo.Ball.StartOffset.Value);
+            var innerLength = _roadPath.length - _levelInfo.Road.ItemsEndOffset.Value -
+                              _levelInfo.Ball.StartOffset.Value;
+            var progress = Mathf.Clamp01(_ballManager.DistanceTraveled / innerLength);
             progressBarGo.value = progress;
             progressBarTextGo.text = $"{Convert.ToInt16(progress * 100)}%";
 
@@ -118,7 +120,7 @@ namespace Assets.Scripts.Modules.Level
 
         private void OnEndPortalReached()
         {
-            ShowGameOver(true);
+            StartCoroutine(ShowGameOverAfter(1, true));
         }
 
         private IEnumerator ShowMessage(string value)

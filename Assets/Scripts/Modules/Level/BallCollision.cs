@@ -6,11 +6,37 @@ namespace Assets.Scripts.Modules.Level
 {
     public class BallCollision : MonoBehaviour
     {
+        private int _rayCastLayerMask;
+        private float _rayCastMaxDistance;
+        private GameObject _nextColorSwitch;
         private BallManager _ballManager;
 
         private void Awake()
         {
+            _rayCastLayerMask = 1 << 9;
+            _rayCastMaxDistance = 3f;
             _ballManager = GetComponent<BallManager>();
+        }
+
+        private void Update()
+        {
+            CheckForColorSwitches();
+        }
+
+        private void CheckForColorSwitches()
+        {
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out var hit,
+                _rayCastMaxDistance, _rayCastLayerMask))
+            {
+                _nextColorSwitch = hit.collider.gameObject;
+                Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance,
+                    Color.yellow, 1, false);
+            }
+            else if (_nextColorSwitch != null)
+            {
+                _ballManager.OnSwitchCollision(_nextColorSwitch);
+                _nextColorSwitch = null;
+            }
         }
 
         private void OnCollisionEnter(Collision col)
@@ -21,10 +47,6 @@ namespace Assets.Scripts.Modules.Level
                 var objectIsBall = RoadItems.Balls.Any(x => x.ToString() == col.gameObject.tag);
                 if (objectIsBall)
                     _ballManager.OnBallCollision(col.gameObject);
-
-                var objectIsSwitch = RoadItems.Switches.Any(x => x.ToString() == col.gameObject.tag);
-                if (objectIsSwitch)
-                    _ballManager.OnSwitchCollision(col.gameObject);
 
                 var objectIsPortal = col.gameObject.tag == RoadItemType.Portal.ToString();
                 if (objectIsPortal)

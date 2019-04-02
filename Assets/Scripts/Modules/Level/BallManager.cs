@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.ServiceModels.ConfigServiceModels.Levels;
@@ -37,13 +38,15 @@ namespace Assets.Scripts.Modules.Level
         public RoadItemType CurrentType { get; private set; }
         public Vector3 Position { get; private set; }
 
-        public void Init(VertexPath path, BallConfig config, Action<GameObject> onBallCollision, Action<GameObject> onBallOvercome, Action onEndPortalReached)
+        public void Init(VertexPath path, BallConfig config, Action<GameObject> onBallCollision,
+            Action<GameObject> onBallOvercome, Action onEndPortalReached)
         {
             _path = path;
             _config = config;
             _onBallCollision = onBallCollision;
             _onBallOvercome = onBallOvercome;
             _onEndPortalReached = onEndPortalReached;
+
 
             _onRoadPos = 0;
             DistanceTraveled = 0;
@@ -64,10 +67,10 @@ namespace Assets.Scripts.Modules.Level
 
         private void Update()
         {
-            if (!_touched || !_canMove || _finished)
+            if (!_touched || !_canMove)
                 return;
 
-            DistanceTraveled += _config.Speed.Value * 0.01f;
+            DistanceTraveled += _config.Speed.Value * Time.deltaTime;
             UpdateBallPosition(DistanceTraveled);
             UpdateCameraPosition(DistanceTraveled);
         }
@@ -77,24 +80,37 @@ namespace Assets.Scripts.Modules.Level
             var pathPointPosition = _path.GetPointAtDistance(distanceTraveled + _config.StartOffset.Value);
             var pathPointRotation = _path.GetRotationAtDistance(distanceTraveled + _config.StartOffset.Value);
 
-            var ballPosition = pathPointPosition + Vector3.up * 0.5f + Vector3.right * _onRoadPos * 2f;
-            var ballRotationAngles = new Vector3(
+            var position = pathPointPosition + Vector3.up * 0.5f + Vector3.right * _onRoadPos * 2f;
+            var rotationAngles = new Vector3(
                 transform.rotation.eulerAngles.x,
                 pathPointRotation.eulerAngles.y,
                 transform.rotation.eulerAngles.z);
-            transform.SetPositionAndRotation(ballPosition, Quaternion.Euler(ballRotationAngles));
-            Position = ballPosition;
+            transform.SetPositionAndRotation(position, Quaternion.Euler(rotationAngles));
+            Position = position;
         }
 
         private void UpdateCameraPosition(float distanceTraveled)
         {
-            var pathPointPosition = _path.GetPointAtDistance(distanceTraveled + _config.StartOffset.Value);
-            var pathPointRotation = _path.GetRotationAtDistance(distanceTraveled + _config.StartOffset.Value);
-
-            var cameraPosition = pathPointPosition + Vector3.right * _onRoadPos * 0f;
-            var cameraRotationAngles = pathPointRotation.eulerAngles + Vector3.forward * 90 + ballCameraInitRotation;
-            ballCamera.transform.SetPositionAndRotation(cameraPosition, Quaternion.Euler(cameraRotationAngles));
-            ballCamera.transform.Translate(ballCameraInitPosition);
+            // follow ball
+            if (!_finished)
+            {
+                var pathPointPosition = _path.GetPointAtDistance(distanceTraveled + _config.StartOffset.Value);
+                var pathPointRotation = _path.GetRotationAtDistance(distanceTraveled + _config.StartOffset.Value);
+                var position = pathPointPosition + Vector3.right * _onRoadPos * 0f;
+                var rotationAngles = pathPointRotation.eulerAngles + Vector3.forward * 90 + ballCameraInitRotation;
+                ballCamera.transform.SetPositionAndRotation(position, Quaternion.Euler(rotationAngles));
+                ballCamera.transform.Translate(ballCameraInitPosition);
+            }
+            // rise
+            else
+            {
+                var position = ballCamera.transform.position +
+                               Vector3.right * Time.deltaTime * _config.Speed.Value * 0.1f +
+                               Vector3.up * Time.deltaTime * _config.Speed.Value * 0.3f +
+                               Vector3.back * Time.deltaTime * _config.Speed.Value * 0.3f;
+                var rotationAngles = ballCamera.transform.rotation.eulerAngles;
+                ballCamera.transform.SetPositionAndRotation(position, Quaternion.Euler(rotationAngles));
+            }
         }
 
         private void ChangeBallColor(RoadItemType ballTypeAfterSwitch)
@@ -106,7 +122,13 @@ namespace Assets.Scripts.Modules.Level
             CurrentType = ballTypeAfterSwitch;
         }
 
-        public void UpdatePosition(float change)
+        private IEnumerator AfterPortalCollision()
+        {
+            yield return new WaitForSeconds(2);
+            _canMove = false;
+        }
+
+        public void UpdateLeftRightPosition(float change)
         {
             if (!_touched)
                 _touched = true;
@@ -143,9 +165,9 @@ namespace Assets.Scripts.Modules.Level
 
         public void OnPortalCollision(GameObject colGameObject)
         {
-            _canMove = false;
             _finished = true;
             _onEndPortalReached();
+            StartCoroutine(AfterPortalCollision());
         }
     }
 }
