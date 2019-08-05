@@ -30,8 +30,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 5}
   m_Children:
-  - {fileID: 4397778643098108301}
-  - {fileID: 5891364949526396027}
+  - {fileID: 748148756820969448}
+  - {fileID: 803213467962708971}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4726,6 +4726,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Particles1
       objectReference: {fileID: 0}
+    - target: {fileID: 3992996548653827623, guid: c8b114f098384a04796134f0eda9f229,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3992996548653827640, guid: c8b114f098384a04796134f0eda9f229,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4783,7 +4788,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8b114f098384a04796134f0eda9f229, type: 3}
---- !u!4 &4397778643098108301 stripped
+--- !u!4 &748148756820969448 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3992996548653827640, guid: c8b114f098384a04796134f0eda9f229,
     type: 3}
@@ -4800,6 +4805,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Particles2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2462520407768781806, guid: a8b2172d948de154389b6553caeef8cf,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6550418938076803056, guid: a8b2172d948de154389b6553caeef8cf,
         type: 3}
@@ -4858,7 +4868,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8b2172d948de154389b6553caeef8cf, type: 3}
---- !u!4 &5891364949526396027 stripped
+--- !u!4 &803213467962708971 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6550418938076803056, guid: a8b2172d948de154389b6553caeef8cf,
     type: 3}
